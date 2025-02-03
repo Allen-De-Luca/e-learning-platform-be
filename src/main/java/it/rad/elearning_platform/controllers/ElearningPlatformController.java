@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ElearningPlatformController {
 
     @GetMapping("/{id}")
-    public Long returnId(@PathVariable Long id){
+    public long returnId(@PathVariable Long id){
         System.out.println("TRYING TRYING TRYING");
         return id*2;
     }
