@@ -1,4 +1,7 @@
 package it.rad.elearning_platform.repository;
 
-public class AppointmentRepository {
+import it.rad.elearning_platform.model.Appointment;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AppointmentRepository extends JpaRepository<Appointment, Long>{
 }
