@@ -1,20 +1,12 @@
 package it.rad.elearning_platform.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @Data
-@Entity
+@Component
 public class CustomerToContact {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    private int id;
     private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "contact_id", nullable = false)
     private Contact contact;
 }

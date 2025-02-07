@@ -1,20 +1,24 @@
 package it.rad.elearning_platform.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Data
-@Entity
+@Component
 public class Appointment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private LocalDateTime appointmentDate;
-    private LocalDateTime reminderDate;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    private int id;
+    private LocalDate appointmentDate;
+    private LocalDate reminderDate;
     private Customer customer;
+    private User user;
+
+    public Appointment (LocalDate appointmentDate, int days, Customer customer, User user){
+        this.appointmentDate = appointmentDate;
+        this.reminderDate = appointmentDate.minusDays(days);
+        this.customer = customer;
+        this.user = user;
+    };
+
 }
