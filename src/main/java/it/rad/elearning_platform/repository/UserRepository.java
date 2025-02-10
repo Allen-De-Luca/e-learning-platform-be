@@ -4,5 +4,5 @@ import it.rad.elearning_platform.model.User;
 
 public interface UserRepository {
 
-    void save(User User);
+    User saveUser(User User);
 }

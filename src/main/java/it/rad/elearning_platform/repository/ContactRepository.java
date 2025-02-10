@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ContactRepository {
 
-    int saveContact(Contact contact);
+    Contact saveContact(Contact contact);
 
     List<Contact> getAllContacts();
 }
