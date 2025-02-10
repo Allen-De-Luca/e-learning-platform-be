@@ -3,10 +3,12 @@ package it.rad.elearning_platform.service;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class UserService implements UserRepository {
 
     @Autowired
