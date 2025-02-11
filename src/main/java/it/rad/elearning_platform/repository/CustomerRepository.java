@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CustomerRepository {
 
-    void saveCustomer(Customer customer);
+    Customer saveCustomer(Customer customer);
 
     List<Customer> getAllCustomer();
 }

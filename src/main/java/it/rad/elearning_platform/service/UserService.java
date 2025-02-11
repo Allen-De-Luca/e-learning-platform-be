@@ -2,7 +2,6 @@ package it.rad.elearning_platform.service;
 
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.User;
-import it.rad.elearning_platform.repository.ContactEmailRepository;
 import it.rad.elearning_platform.repository.ContactRepository;
 import it.rad.elearning_platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UserService implements UserRepository, ContactRepository, ContactEmailRepository {
+public class UserService implements UserRepository, ContactRepository {
 
     @Autowired
     private JdbcTemplate JdbcTemplate;
@@ -43,6 +42,7 @@ public class UserService implements UserRepository, ContactRepository, ContactEm
         JdbcTemplate.update(INSERT_CONTACT_QUERY,
                 contact.getFirstName(), contact.getLastName());
         contact.setId(Objects.requireNonNull(id.getKey()).intValue());
+
         JdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
                 contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
                     ps.setInt(1, contact.getId());

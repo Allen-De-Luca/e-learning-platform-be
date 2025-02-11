@@ -16,6 +16,6 @@ public class Customer {
     private String phoneNumber;
     private String vatNumber;
     private String company;
-    private List<CustomerEmail> emails;
+    private List<String> emails;
 
 }

@@ -9,8 +9,9 @@ import java.util.List;
 public class CustomerService implements CustomerRepository {
 
     @Override
-    public void saveCustomer(Customer customer) {
-
+    public Customer saveCustomer(Customer customer) {
+        
+        return customer;
     }
 
     @Override
