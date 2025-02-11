@@ -10,11 +10,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UserService implements UserRepository, ContactRepository {
+public class UserContactService implements UserRepository, ContactRepository {
 
     @Autowired
     private JdbcTemplate JdbcTemplate;
@@ -26,6 +28,12 @@ public class UserService implements UserRepository, ContactRepository {
             "INSERT INTO contact(first_name, last_name) values (?,?,?)";
     private static final String INSERT_CONTACT_EMAIL_QUERY=
             "INSERT INTO contact_email(contact_id, email) values (?,?)";
+    private static final String SELECT_ALL_CONTACTS=
+            "SELECT c.id, c.first_name, c.last_name, " +
+                    "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
+                    "FROM contact c " +
+                    "LEFT JOIN contact_email ce ON c.id = ce.contact_id " +
+                    "GROUP BY c.id, c.first_name, c.last_name";
 
 
 
@@ -55,6 +63,11 @@ public class UserService implements UserRepository, ContactRepository {
 
     @Override
     public List<Contact> getAllContacts() {
-        return List.of();
+        return JdbcTemplate.query(SELECT_ALL_CONTACTS, (rs, rowNum) -> new Contact(
+                rs.getInt("id"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                Arrays.asList(rs.getString("emails").split(", "))
+        ));
     }
 }
