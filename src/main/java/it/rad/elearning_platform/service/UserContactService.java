@@ -28,12 +28,15 @@ public class UserContactService implements UserRepository, ContactRepository {
             "INSERT INTO contact(first_name, last_name) values (?,?,?)";
     private static final String INSERT_CONTACT_EMAIL_QUERY=
             "INSERT INTO contact_email(contact_id, email) values (?,?)";
+
     private static final String SELECT_ALL_CONTACTS=
             "SELECT c.id, c.first_name, c.last_name, " +
                     "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
                     "FROM contact c " +
                     "LEFT JOIN contact_email ce ON c.id = ce.contact_id " +
                     "GROUP BY c.id, c.first_name, c.last_name";
+    private static final String CHECK_USER_CREDENTIALS=
+            "SELECT COUNT(*) FROM user WHERE username = ? AND user_password = ?";
 
 
 
@@ -43,6 +46,13 @@ public class UserContactService implements UserRepository, ContactRepository {
                 user.getUsername(), user.getPassword(), user.getContact().getId());
         user.setId(Objects.requireNonNull(id.getKey()).intValue());
         return user;
+    }
+
+    @Override
+    public Boolean checkUser(String username, String password) {
+        Integer count = JdbcTemplate.queryForObject(CHECK_USER_CREDENTIALS,
+                Integer.class, username, password);
+        return count != null && count > 0;
     }
 
     @Override
