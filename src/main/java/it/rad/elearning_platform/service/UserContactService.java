@@ -21,22 +21,21 @@ public class UserContactService implements UserRepository, ContactRepository {
     private JdbcTemplate jdbcTemplate;
     private final KeyHolder id = new GeneratedKeyHolder();
 
-    private static final String INSERT_USER_QUERY=
+    private static final String INSERT_USER_QUERY =
             "INSERT INTO user(username, user_password, contact_id) values (?,?,?,?)";
-    private static final String INSERT_CONTACT_QUERY=
+    private static final String INSERT_CONTACT_QUERY =
             "INSERT INTO contact(first_name, last_name) values (?,?,?)";
-    private static final String INSERT_CONTACT_EMAIL_QUERY=
+    private static final String INSERT_CONTACT_EMAIL_QUERY =
             "INSERT INTO contact_email(contact_id, email) values (?,?)";
 
-    private static final String SELECT_ALL_CONTACTS=
+    private static final String SELECT_ALL_CONTACTS =
             "SELECT c.id, c.first_name, c.last_name, " +
                     "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
                     "FROM contact c " +
                     "LEFT JOIN contact_email ce ON c.id = ce.contact_id " +
                     "GROUP BY c.id, c.first_name, c.last_name";
-    private static final String CHECK_USER_CREDENTIALS=
+    private static final String CHECK_USER_CREDENTIALS =
             "SELECT COUNT(*) FROM user WHERE username = ? AND user_password = ?";
-
 
 
     @Override

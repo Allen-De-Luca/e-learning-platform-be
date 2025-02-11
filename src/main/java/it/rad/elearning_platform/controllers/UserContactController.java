@@ -25,6 +25,11 @@ public class UserContactController {
         return user;
     }
 
+    @PostMapping("/login")
+    public boolean checkLogin(String username, String password){
+        return userContactService.checkUser(username, password);
+    }
+
     @PostMapping("/allContacts")
     public List<Contact> getAllContacts(){
         return userContactService.getAllContacts();
