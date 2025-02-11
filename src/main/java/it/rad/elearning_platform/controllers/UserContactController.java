@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class UserController {
+public class UserContactController {
     @Autowired
     UserContactService userContactService;
     User user;
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/allContacts")
-    public List<Contact> getAllContact(){
+    public List<Contact> getAllContacts(){
         return userContactService.getAllContacts();
     }
 }

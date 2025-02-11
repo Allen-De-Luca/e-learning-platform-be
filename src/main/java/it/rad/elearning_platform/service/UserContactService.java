@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +18,7 @@ import java.util.Objects;
 public class UserContactService implements UserRepository, ContactRepository {
 
     @Autowired
-    private JdbcTemplate JdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     private final KeyHolder id = new GeneratedKeyHolder();
 
     private static final String INSERT_USER_QUERY=
@@ -42,7 +41,7 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Override
     public User saveUser(User user) {
-        JdbcTemplate.update(INSERT_USER_QUERY,
+        jdbcTemplate.update(INSERT_USER_QUERY,
                 user.getUsername(), user.getPassword(), user.getContact().getId());
         user.setId(Objects.requireNonNull(id.getKey()).intValue());
         return user;
@@ -50,18 +49,18 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Override
     public Boolean checkUser(String username, String password) {
-        Integer count = JdbcTemplate.queryForObject(CHECK_USER_CREDENTIALS,
+        Integer count = jdbcTemplate.queryForObject(CHECK_USER_CREDENTIALS,
                 Integer.class, username, password);
         return count != null && count > 0;
     }
 
     @Override
     public Contact saveContact(Contact contact) {
-        JdbcTemplate.update(INSERT_CONTACT_QUERY,
+        jdbcTemplate.update(INSERT_CONTACT_QUERY,
                 contact.getFirstName(), contact.getLastName());
         contact.setId(Objects.requireNonNull(id.getKey()).intValue());
 
-        JdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
+        jdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
                 contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
                     ps.setInt(1, contact.getId());
                     ps.setString(2, email);
@@ -73,7 +72,7 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Override
     public List<Contact> getAllContacts() {
-        return JdbcTemplate.query(SELECT_ALL_CONTACTS, (rs, rowNum) -> new Contact(
+        return jdbcTemplate.query(SELECT_ALL_CONTACTS, (rs, rowNum) -> new Contact(
                 rs.getInt("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),

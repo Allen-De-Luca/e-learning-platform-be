@@ -18,4 +18,13 @@ public class Customer {
     private String company;
     private List<String> emails;
 
+    public Customer(String firstName, String lastName, String phoneNumber,
+                    String vatNumber, String company, List<String> emails) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.vatNumber = vatNumber;
+        this.company = company;
+        this.emails = emails;
+    }
 }
