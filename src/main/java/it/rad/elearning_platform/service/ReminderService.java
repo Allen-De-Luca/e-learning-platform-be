@@ -99,7 +99,6 @@ public class ReminderService implements ReminderRepo {
                 contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
                     ps.setInt(1, contact.getId());
                     ps.setString(2, email);
-
                 });
         return contact;
     }
@@ -116,9 +115,23 @@ public class ReminderService implements ReminderRepo {
 
     @Override
     public Customer saveCustomer(Customer customer) {
-        jdbcTemplate.update(INSERT_CUSTOMER_QUERY,
-                customer.getFirstName(), customer.getLastName(), customer.getPhoneNumber(),
-                customer.getVatNumber(), customer.getCompany());
+//        jdbcTemplate.update(INSERT_CUSTOMER_QUERY,
+//                customer.getFirstName(), customer.getLastName(), customer.getPhoneNumber(),
+//                customer.getVatNumber(), customer.getCompany());
+        id = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    INSERT_CUSTOMER_QUERY,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, customer.getFirstName());
+            ps.setString(2, customer.getLastName());
+            ps.setString(3, customer.getPhoneNumber());
+            ps.setString(4, customer.getVatNumber());
+            ps.setString(5, customer.getCompany());
+            return ps;
+        }, id);
+
         customer.setId(Objects.requireNonNull(id.getKey()).intValue());
 
         jdbcTemplate.batchUpdate(INSERT_CUSTOMER_EMAIL_QUERY,

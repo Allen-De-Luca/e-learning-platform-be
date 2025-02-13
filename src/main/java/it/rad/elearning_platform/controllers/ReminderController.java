@@ -5,15 +5,17 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.req.AuthReq;
+import it.rad.elearning_platform.req.NewAppointmentRequest;
+import it.rad.elearning_platform.req.RegisterCustomerReq;
+import it.rad.elearning_platform.req.RegistrationReq;
 import it.rad.elearning_platform.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api")
 public class ReminderController {
 
     @Autowired
@@ -23,17 +25,20 @@ public class ReminderController {
     Customer customer;
     Appointment appointment;
 
-    @PostMapping("/user")
-    public void addUser(@RequestBody AuthReq authReq){
-        contact = new Contact(authReq.getFirstName(), authReq.getLastName(), authReq.getEmail());
+    @PostMapping("/registration")
+    public void addUser(@RequestBody RegistrationReq registrationReq){
+        contact = new Contact(registrationReq.getFirstName(),
+                registrationReq.getLastName(),
+                registrationReq.getEmail());
         contact = reminderService.saveContact(contact);
-        user = new User(authReq.getUsername(), authReq.getPassword(), contact);
+        user = new User(registrationReq.getUsername(), registrationReq.getPassword(), contact);
         user = reminderService.saveUser(user);
     }
 
-    //@GetMapping("/login")
-    public boolean authentication(String username, String password){
-        return reminderService.checkUser(username, password);
+    @GetMapping("/auth")
+//  public boolean authentication(String username, String password){
+    public boolean authentication(AuthReq authReq){
+        return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
     }
 
     @GetMapping("/allContacts")
@@ -41,21 +46,28 @@ public class ReminderController {
         return reminderService.getAllContacts();
     }
 
-    @PostMapping("/customer")
-    public void addCustomer(String firstName, String lastName, String phoneNumber,
-                            String vatNumber, String company, List<String> emails){
-        customer = new Customer(firstName, lastName, phoneNumber, vatNumber, company, emails);
+    @PostMapping("/addCustomer")
+//  public void addCustomer(String firstName, String lastName, String phoneNumber,
+//  String vatNumber, String company, List<String> emails){
+    public void addCustomer(RegisterCustomerReq registerCustomerReq){
+        customer = new Customer(registerCustomerReq.getFirstName(),
+                registerCustomerReq.getLastName(), registerCustomerReq.getPhoneNumber(),
+                registerCustomerReq.getVatNumber(), registerCustomerReq.getCompany(),
+                registerCustomerReq.getEmail());
         customer = reminderService.saveCustomer(customer);
     }
 
-    @GetMapping("/allCustomersForUser")
-    public List<Customer> getAllCustomers(User user){
+    @GetMapping("/allCustomersByUser")
+    public List<Customer> getAllCustomers(@PathVariable Long userId){
         return reminderService.getAllCustomer();
     }
 
     @PostMapping("/addAppointment")
-    public void saveAppointment(int customer_id, int user_id, LocalDate appointmentDate, int days){
-        appointment = new Appointment(customer_id, user_id, appointmentDate, days);
+//  public void saveAppointment(int customer_id, int user_id, LocalDate appointmentDate, int days)
+    public void saveAppointment(NewAppointmentRequest newAppointmentRequest){
+        appointment = new Appointment(newAppointmentRequest.getCustomerId(),
+                newAppointmentRequest.getUserId(), newAppointmentRequest.getAppointmentDate(),
+                newAppointmentRequest.getReminderDays());
         appointment = reminderService.saveAppointment(appointment);
     }
 }
