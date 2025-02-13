@@ -10,6 +10,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -19,12 +21,12 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final KeyHolder id = new GeneratedKeyHolder();
+    private KeyHolder id;
 
     private static final String INSERT_USER_QUERY =
-            "INSERT INTO user(username, user_password, contact_id) values (?,?,?,?)";
+            "INSERT INTO user(username, user_password, contact_id) values (?,?,?)";
     private static final String INSERT_CONTACT_QUERY =
-            "INSERT INTO contact(first_name, last_name) values (?,?,?)";
+            "INSERT INTO contact(first_name, last_name) values (?,?)";
     private static final String INSERT_CONTACT_EMAIL_QUERY =
             "INSERT INTO contact_email(contact_id, email) values (?,?)";
 
@@ -40,8 +42,20 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Override
     public User saveUser(User user) {
-        jdbcTemplate.update(INSERT_USER_QUERY,
-                user.getUsername(), user.getPassword(), user.getContact().getId());
+        id = new GeneratedKeyHolder();
+//        jdbcTemplate.update(INSERT_USER_QUERY,
+//                user.getUsername(), user.getPassword(), user.getContact().getId());
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    INSERT_USER_QUERY,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setInt(3, user.getContact().getId());
+            return ps;
+        }, id);
+
         user.setId(Objects.requireNonNull(id.getKey()).intValue());
         return user;
     }
@@ -55,10 +69,24 @@ public class UserContactService implements UserRepository, ContactRepository {
 
     @Override
     public Contact saveContact(Contact contact) {
-        jdbcTemplate.update(INSERT_CONTACT_QUERY,
-                contact.getFirstName(), contact.getLastName());
-        contact.setId(Objects.requireNonNull(id.getKey()).intValue());
+        id = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    INSERT_CONTACT_QUERY,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, contact.getFirstName());
+            ps.setString(2, contact.getLastName());
+            return ps;
+        }, id);
 
+        Number key = id.getKey();
+        if (key == null) {
+            throw new IllegalStateException("Errore nel recupero della chiave generata per il contatto.");
+        }
+
+ //       contact.setId(Objects.requireNonNull(id.getKey()).intValue());
+        contact.setId(key.intValue());
         jdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
                 contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
                     ps.setInt(1, contact.getId());

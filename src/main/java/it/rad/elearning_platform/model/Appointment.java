@@ -14,16 +14,16 @@ import java.time.LocalDate;
 @Component
 public class Appointment {
     private int id;
+    private int customer_id;
+    private int user_id;
     private LocalDate appointmentDate;
     private LocalDate reminderDate;
-    private Customer customer;
-    private User user;
 
-    public Appointment (LocalDate appointmentDate, int days, Customer customer, User user){
+    public Appointment (int customer_id, int user_id, LocalDate appointmentDate, int days){
+        this.customer_id = customer_id;
+        this.user_id = user_id;
         this.appointmentDate = appointmentDate;
         this.reminderDate = appointmentDate.minusDays(days);
-        this.customer = customer;
-        this.user = user;
     };
 
 }
