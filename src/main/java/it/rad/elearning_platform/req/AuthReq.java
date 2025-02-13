@@ -1,4 +1,4 @@
-package it.rad.elearning_platform.model;
+package it.rad.elearning_platform.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class AddUsedReq {
+public class AuthReq {
     private String username;
     private String password;
     private String firstName;
