@@ -22,7 +22,7 @@ public class UserContactController {
 @PostMapping("/user")
       public void addUser(@RequestBody AddUsedReq addUser){
 //        contact = new Contact(contactName, contactLastName, email);
-        contact = new Contact(addUser.getFirstName(), addUser.getLastName(), addUser.getEmails());
+        contact = new Contact(addUser.getFirstName(), addUser.getLastName(), addUser.getEmail());
         contact = userContactService.saveContact(contact);
 //        user = new User(username, password, contact);
         user = new User(addUser.getUsername(), addUser.getPassword(), contact);
