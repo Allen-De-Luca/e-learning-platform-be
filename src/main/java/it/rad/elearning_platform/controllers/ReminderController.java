@@ -37,7 +37,7 @@ public class ReminderController {
 
     @GetMapping("/auth")
 //  public boolean authentication(String username, String password){
-    public boolean authentication(AuthReq authReq){
+    public Long authentication(AuthReq authReq){
         return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
     }
 
