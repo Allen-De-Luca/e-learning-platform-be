@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class CustomerToContact {
-    private int id;
-    private Customer customer;
-    private Contact contact;
+    private Long id;
+    private Long customerId;
+    private Long contactId;
 }

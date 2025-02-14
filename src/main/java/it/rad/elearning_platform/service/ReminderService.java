@@ -45,16 +45,29 @@ public class ReminderService implements ReminderRepo {
                     "VALUES (?,?,?,?,?)";
     private static final String INSERT_CUSTOMER_EMAIL_QUERY=
             "INSERT INTO customer_email(customer_id, email) values (?,?)";
-    private static final String SELECT_ALL_CUSTOMERS=
-            "SELECT c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company" +
+    private static final String INSERT_CUSTOMER_TO_CONTACT=
+            "INSERT INTO customer_to_contact(customer_id, contact_id) values (?,?)";
+
+    private static final String SELECT_ALL_CUSTOMERS_BY_CONTACT_ID=
+            "SELECT c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company, " +
                     "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
                     "FROM customer c " +
+                    "JOIN customer_to_contact cc ON c.id = cc.customer_id " +
                     "LEFT JOIN customer_email ce ON c.id = ce.customer_id " +
-                    "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company";
+                    "WHERE cc.contact_id = ? " +
+                    "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
-    private static final String INSERT_APPOINTMENT_QUERY=
+    private static final String INSERT_APPOINTMENT_QUERY =
             "INSERT INTO appointment(customer_id, user_id, appointment_date, reminderDate)" +
                     "VALUES (?,?,?,?)";
+    private static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
+            "SELECT a.id AS appointment_id, " +
+                    "    a.customer_id, " +
+                    "    a.user_id, " +
+                    "    a.appointment_date, " +
+                    "    a.reminder_date " +
+                    "FROM appointment a " +
+                    "WHERE a.customer_id = ?;";
 
     @Override
     public User saveUser(User user) {
@@ -66,11 +79,11 @@ public class ReminderService implements ReminderRepo {
             );
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-            ps.setInt(3, user.getContact().getId());
+            ps.setLong(3, user.getContact().getId());
             return ps;
         }, id);
 
-        user.setId(Objects.requireNonNull(id.getKey()).intValue());
+        user.setId(Objects.requireNonNull(id.getKey()).longValue());
         return user;
     }
 
@@ -94,10 +107,10 @@ public class ReminderService implements ReminderRepo {
             return ps;
         }, id);
 
-        contact.setId(Objects.requireNonNull(id.getKey()).intValue());
+        contact.setId(Objects.requireNonNull(id.getKey()).longValue());
         jdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
                 contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
-                    ps.setInt(1, contact.getId());
+                    ps.setLong(1, contact.getId());
                     ps.setString(2, email);
                 });
         return contact;
@@ -106,7 +119,7 @@ public class ReminderService implements ReminderRepo {
     @Override
     public List<Contact> getAllContacts() {
         return jdbcTemplate.query(SELECT_ALL_CONTACTS, (rs, rowNum) -> new Contact(
-                rs.getInt("id"),
+                rs.getLong("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 Arrays.asList(rs.getString("emails").split(", "))
@@ -114,10 +127,7 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public Customer saveCustomer(Customer customer) {
-//        jdbcTemplate.update(INSERT_CUSTOMER_QUERY,
-//                customer.getFirstName(), customer.getLastName(), customer.getPhoneNumber(),
-//                customer.getVatNumber(), customer.getCompany());
+    public Customer saveCustomer(Customer customer, Long contactId) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -132,37 +142,50 @@ public class ReminderService implements ReminderRepo {
             return ps;
         }, id);
 
-        customer.setId(Objects.requireNonNull(id.getKey()).intValue());
+        customer.setId(Objects.requireNonNull(id.getKey()).longValue());
 
         jdbcTemplate.batchUpdate(INSERT_CUSTOMER_EMAIL_QUERY,
                 customer.getEmails(), customer.getEmails().size(), (ps, email) -> {
-                    ps.setInt(1, customer.getId());
+                    ps.setLong(1, customer.getId());
                     ps.setString(2, email);
 
                 });
+
+        jdbcTemplate.update(INSERT_CUSTOMER_TO_CONTACT, customer.getId(), contactId);
         return customer;
     }
 
     @Override
-    public List<Customer> getAllCustomer() {
-        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS, (rs, rowNum) -> new Customer(
-                rs.getInt("id"),
+    public List<Customer> getAllCustomerByUserId(Long contactId) {
+        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> new Customer(
+                rs.getLong("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getString("phone_number"),
                 rs.getString("vat_number"),
                 rs.getString("company"),
                 Arrays.asList(rs.getString("emails").split(", "))
-        ));
+        ), contactId);
     }
 
     @Override
     public Appointment saveAppointment(Appointment appointment) {
-        jdbcTemplate.update(INSERT_APPOINTMENT_QUERY, appointment.getCustomer_id(),
-                appointment.getUser_id(),
+        jdbcTemplate.update(INSERT_APPOINTMENT_QUERY, appointment.getCustomerId(),
+                appointment.getUserId(),
                 appointment.getAppointmentDate(),
                 appointment.getReminderDate());
-        appointment.setId(Objects.requireNonNull(id.getKey()).intValue());
+        appointment.setId(Objects.requireNonNull(id.getKey()).longValue());
         return appointment;
+    }
+
+    @Override
+    public List<Appointment> getAllAppointemntByCustomer(Long customerId) {
+        return jdbcTemplate.query(SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID, (rs, rowNum) -> new Appointment(
+                rs.getLong("appointment_id"),
+                rs.getLong("customer_id"),
+                rs.getLong("user_id"),
+                rs.getDate("appointment_date").toLocalDate(),
+                rs.getDate("reminder_date").toLocalDate()
+        ) , customerId);
     }
 }

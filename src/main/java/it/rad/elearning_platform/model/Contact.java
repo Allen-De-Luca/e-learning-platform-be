@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class Contact {
-    private int id;
+    private Long id;
     private String firstName;
     private String lastName;
     private List<String> emails;

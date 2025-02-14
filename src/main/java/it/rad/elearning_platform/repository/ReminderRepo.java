@@ -17,9 +17,11 @@ public interface ReminderRepo {
 
     List<Contact> getAllContacts();
 
-    Customer saveCustomer(Customer customer);
+    Customer saveCustomer(Customer customer, Long contactId);
 
-    List<Customer> getAllCustomer();
+    List<Customer> getAllCustomerByUserId(Long contactId);
 
     Appointment saveAppointment(Appointment appointment);
+
+    List<Appointment> getAllAppointemntByCustomer(Long customerId);
 }

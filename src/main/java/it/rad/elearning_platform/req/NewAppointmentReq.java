@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewAppointmentRequest {
+public class NewAppointmentReq {
 
-    private int customerId;
-    private int userId;
+    private Long customerId;
+    private Long userId;
     private LocalDate appointmentDate;
     private int reminderDays;
 

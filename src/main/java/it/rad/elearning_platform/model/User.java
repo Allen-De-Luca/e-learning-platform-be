@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class User {
-    private int id;
+    private Long id;
     private String username;
     private String password;
     private Contact contact;

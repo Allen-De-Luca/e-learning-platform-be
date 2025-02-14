@@ -5,7 +5,7 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.req.AuthReq;
-import it.rad.elearning_platform.req.NewAppointmentRequest;
+import it.rad.elearning_platform.req.NewAppointmentReq;
 import it.rad.elearning_platform.req.RegisterCustomerReq;
 import it.rad.elearning_platform.req.RegistrationReq;
 import it.rad.elearning_platform.service.ReminderService;
@@ -46,28 +46,35 @@ public class ReminderController {
         return reminderService.getAllContacts();
     }
 
-    @PostMapping("/addCustomer")
+    @PostMapping("/addCustomer/{contactId}")
 //  public void addCustomer(String firstName, String lastName, String phoneNumber,
 //  String vatNumber, String company, List<String> emails){
-    public void addCustomer(RegisterCustomerReq registerCustomerReq){
+    public void addCustomer(@RequestBody RegisterCustomerReq registerCustomerReq,
+                            @PathVariable Long contactId){
         customer = new Customer(registerCustomerReq.getFirstName(),
                 registerCustomerReq.getLastName(), registerCustomerReq.getPhoneNumber(),
                 registerCustomerReq.getVatNumber(), registerCustomerReq.getCompany(),
                 registerCustomerReq.getEmail());
-        customer = reminderService.saveCustomer(customer);
+        customer = reminderService.saveCustomer(customer, contactId);
     }
 
-    @GetMapping("/allCustomersByUser")
-    public List<Customer> getAllCustomers(@PathVariable Long userId){
-        return reminderService.getAllCustomer();
+    @GetMapping("/allCustomersByContact/{contactId}")
+    public List<Customer> getAllCustomersByContactId(@PathVariable Long contactId){
+
+        return reminderService.getAllCustomerByUserId(contactId);
     }
 
     @PostMapping("/addAppointment")
 //  public void saveAppointment(int customer_id, int user_id, LocalDate appointmentDate, int days)
-    public void saveAppointment(NewAppointmentRequest newAppointmentRequest){
-        appointment = new Appointment(newAppointmentRequest.getCustomerId(),
-                newAppointmentRequest.getUserId(), newAppointmentRequest.getAppointmentDate(),
-                newAppointmentRequest.getReminderDays());
+    public void saveAppointment(NewAppointmentReq newAppointmentReq){
+        appointment = new Appointment(newAppointmentReq.getCustomerId(),
+                newAppointmentReq.getUserId(), newAppointmentReq.getAppointmentDate(),
+                newAppointmentReq.getReminderDays());
         appointment = reminderService.saveAppointment(appointment);
+    }
+
+    @GetMapping("/allAppointmentByCustomerId/{customerId}")
+    public List<Appointment> getAllAppointmentByCustomerId(@PathVariable Long customerId){
+        return reminderService.getAllAppointemntByCustomer(customerId);
     }
 }
