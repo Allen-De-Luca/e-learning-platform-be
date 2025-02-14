@@ -19,7 +19,7 @@ public interface ReminderRepo {
 
     Customer saveCustomer(Customer customer, Long contactId);
 
-    List<Customer> getAllCustomerByUserId(Long contactId);
+    List<Customer> getAllCustomerByUserId(Long userId);
 
     Appointment saveAppointment(Appointment appointment);
 

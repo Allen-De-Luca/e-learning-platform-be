@@ -58,10 +58,10 @@ public class ReminderController {
         customer = reminderService.saveCustomer(customer, contactId);
     }
 
-    @GetMapping("/allCustomersByContact/{contactId}")
-    public List<Customer> getAllCustomersByContactId(@PathVariable Long contactId){
+    @GetMapping("/allCustomersByContact/{userId}")
+    public List<Customer> getAllCustomersByUserId(@PathVariable Long userId){
 
-        return reminderService.getAllCustomerByUserId(contactId);
+        return reminderService.getAllCustomerByUserId(userId);
     }
 
     @PostMapping("/addAppointment")

@@ -48,13 +48,15 @@ public class ReminderService implements ReminderRepo {
     private static final String INSERT_CUSTOMER_TO_CONTACT=
             "INSERT INTO customer_to_contact(customer_id, contact_id) values (?,?)";
 
-    private static final String SELECT_ALL_CUSTOMERS_BY_CONTACT_ID=
+    private static final String SELECT_ALL_CUSTOMERS_BY_USER_ID =
             "SELECT c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company, " +
                     "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
                     "FROM customer c " +
                     "JOIN customer_to_contact cc ON c.id = cc.customer_id " +
+                    "JOIN contact ct ON cc.contact_id = ct.id " +
+                    "JOIN user u ON ct.id = u.contact_id " +
                     "LEFT JOIN customer_email ce ON c.id = ce.customer_id " +
-                    "WHERE cc.contact_id = ? " +
+                    "WHERE u.id = ? " +
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
     private static final String INSERT_APPOINTMENT_QUERY =
@@ -159,8 +161,8 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public List<Customer> getAllCustomerByUserId(Long contactId) {
-        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> new Customer(
+    public List<Customer> getAllCustomerByUserId(Long userId) {
+        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_USER_ID, (rs, rowNum) -> new Customer(
                 rs.getLong("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
@@ -168,7 +170,7 @@ public class ReminderService implements ReminderRepo {
                 rs.getString("vat_number"),
                 rs.getString("company"),
                 Arrays.asList(rs.getString("emails").split(", "))
-        ), contactId);
+        ), userId);
     }
 
     @Override
