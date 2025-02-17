@@ -27,7 +27,7 @@ public class ReminderService implements ReminderRepo {
     private static final String INSERT_USER_QUERY =
             "INSERT INTO user(username, user_password, contact_id) values (?,?,?)";
     private static final String CHECK_USER_CREDENTIALS =
-            "SELECT u.id FROM user u WHERE username = ? AND user_password = ?";
+            "SELECT * FROM user WHERE username = ? AND user_password = ?";
 
     private static final String INSERT_CONTACT_QUERY =
             "INSERT INTO contact(first_name, last_name) values (?,?)";
@@ -90,10 +90,15 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public Long checkUser(String username, String password) {
+    public List<User> checkUser(String username, String password) {
+
         try{
-            return jdbcTemplate.queryForObject(CHECK_USER_CREDENTIALS,
-                    Long.class, username, password);
+            return jdbcTemplate.query(CHECK_USER_CREDENTIALS, (rs, rowNum) -> new User(
+                    rs.getLong("id"),
+                    rs.getString("username"),
+                    rs.getString("user_pass;word"),
+                    rs.getLong("contact_id")
+                    ), username, password);
         } catch (Exception e) {
             return null;
         }

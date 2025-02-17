@@ -20,4 +20,13 @@ public class User {
         this.password=pass;
         this.contact=c;
     }
+
+    public User(Long id, String username, String pass, Long contactId){
+        Contact c = new Contact();
+        c.setId(contactId);
+        this.setId(id);
+        this.setUsername(username);
+        this.setPassword(pass);
+        this.setContact(c);
+    }
 }
