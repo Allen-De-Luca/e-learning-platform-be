@@ -4,10 +4,7 @@ import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
-import it.rad.elearning_platform.req.AuthReq;
-import it.rad.elearning_platform.req.NewAppointmentReq;
-import it.rad.elearning_platform.req.RegisterCustomerReq;
-import it.rad.elearning_platform.req.RegistrationReq;
+import it.rad.elearning_platform.req.*;
 import it.rad.elearning_platform.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +34,7 @@ public class ReminderController {
 
     @GetMapping("/auth")
 //  public boolean authentication(String username, String password){
-    public List<User> authentication(AuthReq authReq){
+    public List<User> authentication(@RequestBody AuthReq authReq){
         return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
     }
 
@@ -47,8 +44,6 @@ public class ReminderController {
     }
 
     @PostMapping("/addCustomer/{contactId}")
-//  public void addCustomer(String firstName, String lastName, String phoneNumber,
-//  String vatNumber, String company, List<String> emails){
     public void addCustomer(@RequestBody RegisterCustomerReq registerCustomerReq,
                             @PathVariable Long contactId){
         customer = new Customer(registerCustomerReq.getFirstName(),
@@ -58,15 +53,23 @@ public class ReminderController {
         customer = reminderService.saveCustomer(customer, contactId);
     }
 
+    @PostMapping("/addContactEmail")
+    public void addContactEmail(@RequestBody ContactEmailReq contactEmailReq){
+        reminderService.addContactEmail(contactEmailReq.getContactId(), contactEmailReq.getEmail());
+    }
+
+    @DeleteMapping("/deleteContactEmail")
+    public void deleteContactEmail(@RequestBody ContactEmailReq contactEmailReq){
+        reminderService.deleteContactEmail(contactEmailReq.getContactId(), contactEmailReq.getEmail());
+    }
+
     @GetMapping("/allCustomersByContact/{userId}")
     public List<Customer> getAllCustomersByUserId(@PathVariable Long userId){
-
         return reminderService.getAllCustomerByUserId(userId);
     }
 
     @PostMapping("/addAppointment")
-//  public void saveAppointment(int customer_id, int user_id, LocalDate appointmentDate, int days)
-    public void saveAppointment(NewAppointmentReq newAppointmentReq){
+    public void saveAppointment(@RequestBody NewAppointmentReq newAppointmentReq){
         appointment = new Appointment(newAppointmentReq.getCustomerId(),
                 newAppointmentReq.getUserId(), newAppointmentReq.getAppointmentDate(),
                 newAppointmentReq.getReminderDays());
@@ -75,6 +78,11 @@ public class ReminderController {
 
     @GetMapping("/allAppointmentByCustomerId/{customerId}")
     public List<Appointment> getAllAppointmentByCustomerId(@PathVariable Long customerId){
-        return reminderService.getAllAppointemntByCustomer(customerId);
+        return reminderService.getAllAppointmentByCustomer(customerId);
+    }
+
+    @DeleteMapping("/deleteAppointment/{appointmentId}")
+    public void deleteAppointment(@PathVariable Long appointmentId){
+        reminderService.deleteAppointmentById(appointmentId);
     }
 }

@@ -15,6 +15,10 @@ public interface ReminderRepo {
 
     Contact saveContact(Contact contact);
 
+    void addContactEmail(Long contactId, List<String> email);
+
+    void deleteContactEmail(Long contactId, List<String> email);
+
     List<Contact> getAllContacts();
 
     Customer saveCustomer(Customer customer, Long contactId);
@@ -23,5 +27,8 @@ public interface ReminderRepo {
 
     Appointment saveAppointment(Appointment appointment);
 
-    List<Appointment> getAllAppointemntByCustomer(Long customerId);
+    List<Appointment> getAllAppointmentByCustomer(Long customerId);
+
+    void deleteAppointmentById(Long appointmentId);
+
 }

@@ -17,59 +17,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static it.rad.elearning_platform.constants.Query.*;
+
 @Service
 public class ReminderService implements ReminderRepo {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private KeyHolder id;
-
-    private static final String INSERT_USER_QUERY =
-            "INSERT INTO user(username, user_password, contact_id) values (?,?,?)";
-    private static final String CHECK_USER_CREDENTIALS =
-            "SELECT * FROM user WHERE username = ? AND user_password = ?";
-
-    private static final String INSERT_CONTACT_QUERY =
-            "INSERT INTO contact(first_name, last_name) values (?,?)";
-    private static final String INSERT_CONTACT_EMAIL_QUERY =
-            "INSERT INTO contact_email(contact_id, email) values (?,?)";
-    private static final String SELECT_ALL_CONTACTS =
-            "SELECT c.id, c.first_name, c.last_name, " +
-                    "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
-                    "FROM contact c " +
-                    "LEFT JOIN contact_email ce ON c.id = ce.contact_id " +
-                    "GROUP BY c.id, c.first_name, c.last_name";
-
-    private static final String INSERT_CUSTOMER_QUERY=
-            "INSERT INTO customer (first_name, last_name, phone_number, vat_number, company) " +
-                    "VALUES (?,?,?,?,?)";
-    private static final String INSERT_CUSTOMER_EMAIL_QUERY=
-            "INSERT INTO customer_email(customer_id, email) values (?,?)";
-    private static final String INSERT_CUSTOMER_TO_CONTACT=
-            "INSERT INTO customer_to_contact(customer_id, contact_id) values (?,?)";
-
-    private static final String SELECT_ALL_CUSTOMERS_BY_USER_ID =
-            "SELECT c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company, " +
-                    "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
-                    "FROM customer c " +
-                    "JOIN customer_to_contact cc ON c.id = cc.customer_id " +
-                    "JOIN contact ct ON cc.contact_id = ct.id " +
-                    "JOIN user u ON ct.id = u.contact_id " +
-                    "LEFT JOIN customer_email ce ON c.id = ce.customer_id " +
-                    "WHERE u.id = ? " +
-                    "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
-
-    private static final String INSERT_APPOINTMENT_QUERY =
-            "INSERT INTO appointment(customer_id, user_id, appointment_date, reminderDate)" +
-                    "VALUES (?,?,?,?)";
-    private static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
-            "SELECT a.id AS appointment_id, " +
-                    "    a.customer_id, " +
-                    "    a.user_id, " +
-                    "    a.appointment_date, " +
-                    "    a.reminder_date " +
-                    "FROM appointment a " +
-                    "WHERE a.customer_id = ?;";
 
     @Override
     public User saveUser(User user) {
@@ -124,6 +79,22 @@ public class ReminderService implements ReminderRepo {
                     ps.setString(2, email);
                 });
         return contact;
+    }
+
+    @Override
+    public void addContactEmail(Long contactId, List<String> emails) {
+        jdbcTemplate.batchUpdate(ADD_CONTACT_EMAIL_BY_CONTACT_ID, emails, emails.size(), (ps, email) ->{
+            ps.setLong(1, contactId);
+            ps.setString(2, email);
+        });
+    }
+
+    @Override
+    public void deleteContactEmail(Long contactId, List<String> emails) {
+        jdbcTemplate.batchUpdate(DELETE_CONTACT_EMAIL_BY_CONTACT_ID, emails, emails.size(), (ps, email) ->{
+            ps.setLong(1, contactId);
+            ps.setString(2, email);
+        });
     }
 
     @Override
@@ -189,7 +160,7 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public List<Appointment> getAllAppointemntByCustomer(Long customerId) {
+    public List<Appointment> getAllAppointmentByCustomer(Long customerId) {
         return jdbcTemplate.query(SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID, (rs, rowNum) -> new Appointment(
                 rs.getLong("appointment_id"),
                 rs.getLong("customer_id"),
@@ -197,5 +168,10 @@ public class ReminderService implements ReminderRepo {
                 rs.getDate("appointment_date").toLocalDate(),
                 rs.getDate("reminder_date").toLocalDate()
         ) , customerId);
+    }
+
+    @Override
+    public void deleteAppointmentById(Long appointmentId) {
+        jdbcTemplate.update(DELETE_APPOINTMENT_BY_ID, appointmentId);
     }
 }
