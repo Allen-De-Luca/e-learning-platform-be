@@ -45,7 +45,7 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public List<User> checkUser(String username, String password) {
+    public User checkUser(String username, String password) {
 
         try{
             return jdbcTemplate.query(CHECK_USER_CREDENTIALS, (rs, rowNum) -> new User(
@@ -53,7 +53,7 @@ public class ReminderService implements ReminderRepo {
                     rs.getString("username"),
                     rs.getString("user_pass;word"),
                     rs.getLong("contact_id")
-                    ), username, password);
+                    ), username, password).stream().findFirst().get();
         } catch (Exception e) {
             return null;
         }

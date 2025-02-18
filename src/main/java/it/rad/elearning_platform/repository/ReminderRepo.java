@@ -11,7 +11,7 @@ public interface ReminderRepo {
 
     User saveUser(User User);
 
-    List<User> checkUser(String username, String password);
+    User checkUser(String username, String password);
 
     Contact saveContact(Contact contact);
 

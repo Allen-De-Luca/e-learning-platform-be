@@ -32,9 +32,9 @@ public class ReminderController {
         user = reminderService.saveUser(user);
     }
 
-    @GetMapping("/auth")
+    @PostMapping("/auth")
 //  public boolean authentication(String username, String password){
-    public List<User> authentication(@RequestBody AuthReq authReq){
+    public User authentication(@RequestBody AuthReq authReq){
         return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
     }
 
