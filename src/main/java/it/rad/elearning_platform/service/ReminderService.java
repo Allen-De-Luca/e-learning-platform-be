@@ -54,7 +54,7 @@ public class ReminderService implements ReminderRepo {
             return jdbcTemplate.query(CHECK_USER_CREDENTIALS, (rs, rowNum) -> new User(
                     rs.getLong("id"),
                     rs.getString("username"),
-                    rs.getString("user_pass;word"),
+                    rs.getString("user_password"),
                     rs.getLong("contact_id")
                     ), username, password).stream().findFirst().get();
         } catch (Exception e) {
