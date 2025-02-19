@@ -5,7 +5,7 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.req.*;
-import it.rad.elearning_platform.responseBody.EventListRsp;
+import it.rad.elearning_platform.rsp.EventListRsp;
 import it.rad.elearning_platform.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -86,8 +86,8 @@ public class ReminderController {
         reminderService.deleteAppointmentById(appointmentId);
     }
 
-    @GetMapping("/getEvent/{userId}")
-    public EventListRsp getEventByUserId(@PathVariable Long userId){
-        return reminderService.getEventByUserId(userId);
+    @GetMapping("/getEvents/{userId}")
+    public EventListRsp getEventsByUserId(@PathVariable Long userId){
+        return reminderService.getEventsByUserId(userId);
     }
 }

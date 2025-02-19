@@ -59,11 +59,11 @@ public class Query
             "DELETE * FROM appointment WHERE id=?";
     public static final String GET_ALL_APPOINTMENT_DATE_BY_USER_ID=
             "SELECT a.id AS appointment_id, " +
-                    "a.appointment_date, " +
-                    "a.reminder_date, " +
+                    "DATE_FORMAT(a.appointment_date, \"%Y-%m-%d\") as appointment_date, " +
+                    "DATE_FORMAT(a.reminder_date, \"%Y-%m-%d\") as reminder_date, " +
                     "c.id AS customer_id, " +
                     "c.company " +
                     "FROM appointment a " +
                     "JOIN customer c ON a.customer_id = c.id " +
-                    "WHERE a.user_id = ?;";
+                    "WHERE a.user_id = ?; ";
 }

@@ -1,4 +1,4 @@
-package it.rad.elearning_platform.responseBody;
+package it.rad.elearning_platform.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,5 +11,5 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Event {
     String title;
-    LocalDate date;
+    String date;
 }

@@ -1,5 +1,6 @@
-package it.rad.elearning_platform.responseBody;
+package it.rad.elearning_platform.rsp;
 
+import it.rad.elearning_platform.model.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
