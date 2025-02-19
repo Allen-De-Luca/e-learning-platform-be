@@ -5,6 +5,8 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.repository.ReminderRepo;
+import it.rad.elearning_platform.responseBody.Event;
+import it.rad.elearning_platform.responseBody.EventListRsp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -168,6 +171,19 @@ public class ReminderService implements ReminderRepo {
                 rs.getDate("appointment_date").toLocalDate(),
                 rs.getDate("reminder_date").toLocalDate()
         ) , customerId);
+    }
+
+    @Override
+    public EventListRsp getEventByUserId(Long userId) {
+        List<Event> appointments = new ArrayList<>();
+        List<Event> reminders = new ArrayList<>();
+
+        jdbcTemplate.query(GET_ALL_APPOINTMENT_DATE_BY_USER_ID, (rs) -> {
+            appointments.add(new Event(rs.getString("company") + " Appointment", rs.getDate("appointment_date").toLocalDate()));
+            reminders.add(new Event(rs.getString("company") + " Reminder", rs.getDate("reminder_date").toLocalDate()));
+        }, userId);
+
+        return new EventListRsp(appointments, reminders);
     }
 
     @Override

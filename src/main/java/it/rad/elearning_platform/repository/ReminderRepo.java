@@ -4,6 +4,7 @@ import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
+import it.rad.elearning_platform.responseBody.EventListRsp;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public interface ReminderRepo {
     Appointment saveAppointment(Appointment appointment);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
+
+    EventListRsp getEventByUserId(Long userId);
 
     void deleteAppointmentById(Long appointmentId);
 

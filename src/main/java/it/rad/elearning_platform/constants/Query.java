@@ -49,12 +49,21 @@ public class Query
                     "VALUES (?,?,?,?)";
     public static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
             "SELECT a.id AS appointment_id, " +
-                    "    a.customer_id, " +
-                    "    a.user_id, " +
-                    "    a.appointment_date, " +
-                    "    a.reminder_date " +
+                    "a.customer_id, " +
+                    "a.user_id, " +
+                    "a.appointment_date, " +
+                    "a.reminder_date " +
                     "FROM appointment a " +
                     "WHERE a.customer_id = ?;";
     public static final String DELETE_APPOINTMENT_BY_ID=
             "DELETE * FROM appointment WHERE id=?";
+    public static final String GET_ALL_APPOINTMENT_DATE_BY_USER_ID=
+            "SELECT a.id AS appointment_id, " +
+                    "a.appointment_date, " +
+                    "a.reminder_date, " +
+                    "c.id AS customer_id, " +
+                    "c.company " +
+                    "FROM appointment a " +
+                    "JOIN customer c ON a.customer_id = c.id " +
+                    "WHERE a.user_id = ?;";
 }

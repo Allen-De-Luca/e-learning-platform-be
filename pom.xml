@@ -77,35 +77,20 @@
 			<version>2.5.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.11.5</version>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.5</version>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
 		</dependency>
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.11.5</version>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
+			<version>5.0.1</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>jakarta.persistence</groupId>-->
-<!--			<artifactId>jakarta.persistence-api</artifactId>-->
-<!--			<version>3.1.0</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.hibernate.validator</groupId>-->
-<!--			<artifactId>hibernate-validator</artifactId>-->
-<!--			<version>8.0.1.Final</version> &lt;!&ndash; Assicurati che la versione sia aggiornata &ndash;&gt;-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>jakarta.el</groupId>-->
-<!--			<artifactId>jakarta.el-api</artifactId>-->
-<!--			<version>5.0.1</version> &lt;!&ndash; Necessario per Hibernate Validator &ndash;&gt;-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>

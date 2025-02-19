@@ -5,6 +5,7 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.req.*;
+import it.rad.elearning_platform.responseBody.EventListRsp;
 import it.rad.elearning_platform.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,6 @@ public class ReminderController {
     }
 
     @PostMapping("/auth")
-//  public boolean authentication(String username, String password){
     public User authentication(@RequestBody AuthReq authReq){
         return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
     }
@@ -84,5 +84,10 @@ public class ReminderController {
     @DeleteMapping("/deleteAppointment/{appointmentId}")
     public void deleteAppointment(@PathVariable Long appointmentId){
         reminderService.deleteAppointmentById(appointmentId);
+    }
+
+    @GetMapping("/getEvent/{userId}")
+    public EventListRsp getEventByUserId(@PathVariable Long userId){
+        return reminderService.getEventByUserId(userId);
     }
 }
