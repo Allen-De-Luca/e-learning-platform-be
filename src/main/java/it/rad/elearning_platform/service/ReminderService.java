@@ -48,21 +48,6 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public User checkUser(String username, String password) {
-
-        try{
-            return jdbcTemplate.query(CHECK_USER_CREDENTIALS, (rs, rowNum) -> new User(
-                    rs.getLong("id"),
-                    rs.getString("username"),
-                    rs.getString("user_password"),
-                    rs.getLong("contact_id")
-                    ), username, password).stream().findFirst().get();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Override
     public Contact saveContact(Contact contact) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -137,6 +122,22 @@ public class ReminderService implements ReminderRepo {
 
         jdbcTemplate.update(INSERT_CUSTOMER_TO_CONTACT, customer.getId(), contactId);
         return customer;
+    }
+
+    @Override
+    public void addCustomerEmail(Long customerId, List<String> emails) {
+        jdbcTemplate.batchUpdate(ADD_CUSTOMER_EMAIL_BY_CUSTOMER_ID, emails, emails.size(), (ps, email) ->{
+            ps.setLong(1, customerId);
+            ps.setString(2, email);
+        });
+    }
+
+    @Override
+    public void deleteCustomerEmail(Long customerId, List<String> emails) {
+        jdbcTemplate.batchUpdate(DELETE_CUSTOMER_EMAIL_BY_CUSTOMER_ID, emails, emails.size(), (ps, email) ->{
+            ps.setLong(1, customerId);
+            ps.setString(2, email);
+        });
     }
 
     @Override

@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactEmailReq
+public class EmailReq
 {
-    Long contactId;
+    Long id;
     List<String> email;
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/a")
 public class ReminderController {
 
     @Autowired
@@ -33,11 +33,6 @@ public class ReminderController {
         user = reminderService.saveUser(user);
     }
 
-    @PostMapping("/auth")
-    public User authentication(@RequestBody AuthReq authReq){
-        return reminderService.checkUser(authReq.getUsername(), authReq.getPassword());
-    }
-
     @GetMapping("/allContacts")
     public List<Contact> getAllContacts(){
         return reminderService.getAllContacts();
@@ -54,13 +49,23 @@ public class ReminderController {
     }
 
     @PostMapping("/addContactEmail")
-    public void addContactEmail(@RequestBody ContactEmailReq contactEmailReq){
-        reminderService.addContactEmail(contactEmailReq.getContactId(), contactEmailReq.getEmail());
+    public void addContactEmail(@RequestBody EmailReq emailReq){
+        reminderService.addContactEmail(emailReq.getId(), emailReq.getEmail());
     }
 
     @DeleteMapping("/deleteContactEmail")
-    public void deleteContactEmail(@RequestBody ContactEmailReq contactEmailReq){
-        reminderService.deleteContactEmail(contactEmailReq.getContactId(), contactEmailReq.getEmail());
+    public void deleteContactEmail(@RequestBody EmailReq emailReq){
+        reminderService.deleteContactEmail(emailReq.getId(), emailReq.getEmail());
+    }
+
+    @PostMapping("/addCustomerEmail")
+    public void addCustomerEmail(@RequestBody EmailReq emailReq){
+        reminderService.addCustomerEmail(emailReq.getId(), emailReq.getEmail());
+    }
+
+    @DeleteMapping("/deleteCustomerEmail")
+    public void deleteCustomerEmail(@RequestBody EmailReq emailReq){
+        reminderService.deleteCustomerEmail(emailReq.getId(), emailReq.getEmail());
     }
 
     @GetMapping("/allCustomersByContact/{userId}")

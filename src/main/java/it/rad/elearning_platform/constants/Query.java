@@ -6,9 +6,9 @@ public class Query
     private Query(){}
 
     public static final String INSERT_USER_QUERY =
-            "INSERT INTO user(username, user_password, contact_id) values (?,?,?)";
-    public static final String CHECK_USER_CREDENTIALS =
-            "SELECT * FROM user WHERE username = ? AND user_password = ?";
+            "INSERT INTO user(username, user_password) values (?,?)";
+    public static final String FIND_USER_BY_USERNAME=
+            "SELECT u.username, u.user_password FROM user u WHERE username = ?";
 
     public static final String INSERT_CONTACT_QUERY =
             "INSERT INTO contact(first_name, last_name) values (?,?)";
@@ -30,6 +30,10 @@ public class Query
                     "VALUES (?,?,?,?,?)";
     public static final String INSERT_CUSTOMER_EMAIL_QUERY=
             "INSERT INTO customer_email(customer_id, email) values (?,?)";
+    public static final String ADD_CUSTOMER_EMAIL_BY_CUSTOMER_ID=
+            "INSERT INTO customer_email (customer_id, email) values (?,?)";
+    public static final String DELETE_CUSTOMER_EMAIL_BY_CUSTOMER_ID=
+            "DELETE * FROM customer_email WHERE customer_id = ? AND email = ?";
     public static final String INSERT_CUSTOMER_TO_CONTACT=
             "INSERT INTO customer_to_contact(customer_id, contact_id) values (?,?)";
 

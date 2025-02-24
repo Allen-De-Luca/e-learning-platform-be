@@ -12,17 +12,19 @@ public interface ReminderRepo {
 
     User saveUser(User User);
 
-    User checkUser(String username, String password);
-
     Contact saveContact(Contact contact);
 
-    void addContactEmail(Long contactId, List<String> email);
+    void addContactEmail(Long contactId, List<String> emails);
 
-    void deleteContactEmail(Long contactId, List<String> email);
+    void deleteContactEmail(Long contactId, List<String> emails);
 
     List<Contact> getAllContacts();
 
     Customer saveCustomer(Customer customer, Long contactId);
+
+    void addCustomerEmail(Long customerId, List<String> emails);
+
+    void deleteCustomerEmail(Long customerId, List<String> emails);
 
     List<Customer> getAllCustomerByUserId(Long userId);
 
