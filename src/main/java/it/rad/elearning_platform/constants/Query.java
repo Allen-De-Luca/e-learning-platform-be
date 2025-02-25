@@ -10,7 +10,7 @@ public class Query
     public static final String FIND_USER_BY_USERNAME=
             "SELECT * FROM user WHERE username = ?";
     public static final String UPDATE_USER_WITH_CONTACT_ID=
-            "UPDATE user u contact_id=? WHERE u.id = ?";
+            "UPDATE user SET contact_id = ? WHERE u.id = ?";
 
     public static final String ADD_CONTACT =
             "INSERT INTO contact(first_name, last_name) values (?,?)";
