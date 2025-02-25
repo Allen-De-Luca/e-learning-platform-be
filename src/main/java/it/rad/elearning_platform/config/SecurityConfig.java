@@ -24,7 +24,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Permetti l'accesso senza autenticazione agli endpoint di login e registrazione
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("v3/api-docs").permitAll()// Permetti l'accesso senza autenticazione agli endpoint di login e registrazione
                         .anyRequest().authenticated() // Tutti gli altri endpoint richiedono autenticazione
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
