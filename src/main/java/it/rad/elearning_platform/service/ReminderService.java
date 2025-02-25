@@ -3,7 +3,6 @@ package it.rad.elearning_platform.service;
 import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
-import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.repository.ReminderRepo;
 import it.rad.elearning_platform.model.Event;
 import it.rad.elearning_platform.rsp.EventListRsp;
@@ -30,29 +29,11 @@ public class ReminderService implements ReminderRepo {
     private KeyHolder id;
 
     @Override
-    public User saveUser(User user) {
+    public void addContactUser(Contact contact, Long userId) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    INSERT_USER_QUERY,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setLong(3, user.getContact().getId());
-            return ps;
-        }, id);
-
-        user.setId(Objects.requireNonNull(id.getKey()).longValue());
-        return user;
-    }
-
-    @Override
-    public Contact saveContact(Contact contact) {
-        id = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    INSERT_CONTACT_QUERY,
+                    ADD_CONTACT,
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, contact.getFirstName());
@@ -60,13 +41,16 @@ public class ReminderService implements ReminderRepo {
             return ps;
         }, id);
 
-        contact.setId(Objects.requireNonNull(id.getKey()).longValue());
-        jdbcTemplate.batchUpdate(INSERT_CONTACT_EMAIL_QUERY,
-                contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
-                    ps.setLong(1, contact.getId());
-                    ps.setString(2, email);
-                });
-        return contact;
+        Long contactId = Objects.requireNonNull(id.getKey()).longValue();
+        jdbcTemplate.batchUpdate(ADD_CONTACT_EMAIL,
+            contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
+                ps.setLong(1, contactId);
+                ps.setString(2, email);
+            }
+        );
+
+        jdbcTemplate.update(UPDATE_USER_WITH_CONTACT_ID, contactId, userId);
+
     }
 
     @Override

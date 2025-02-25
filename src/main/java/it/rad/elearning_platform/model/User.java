@@ -20,6 +20,12 @@ public class User implements UserDetails {
     private String password;
     private Contact contact;
 
+    public User(Long id, String username, String password){
+        this.id=id;
+        this.username=username;
+        this.password=password;
+    }
+
     public User(String username, String pass, Contact c){
         this.username=username;
         this.password=pass;

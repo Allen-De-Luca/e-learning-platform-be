@@ -8,11 +8,13 @@ public class Query
     public static final String INSERT_USER_QUERY =
             "INSERT INTO user(username, user_password) values (?,?)";
     public static final String FIND_USER_BY_USERNAME=
-            "SELECT u.username, u.user_password FROM user u WHERE username = ?";
+            "SELECT * FROM user WHERE username = ?";
+    public static final String UPDATE_USER_WITH_CONTACT_ID=
+            "UPDATE user u contact_id=? WHERE u.id = ?";
 
-    public static final String INSERT_CONTACT_QUERY =
+    public static final String ADD_CONTACT =
             "INSERT INTO contact(first_name, last_name) values (?,?)";
-    public static final String INSERT_CONTACT_EMAIL_QUERY =
+    public static final String ADD_CONTACT_EMAIL =
             "INSERT INTO contact_email(contact_id, email) values (?,?)";
     public static final String SELECT_ALL_CONTACTS =
             "SELECT c.id, c.first_name, c.last_name, " +

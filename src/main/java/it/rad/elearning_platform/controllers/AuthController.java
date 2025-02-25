@@ -1,6 +1,7 @@
 package it.rad.elearning_platform.controllers;
 
 import it.rad.elearning_platform.req.AuthReq;
+import it.rad.elearning_platform.req.RegistrationReq;
 import it.rad.elearning_platform.rsp.AuthRsp;
 import it.rad.elearning_platform.service.AuthService;
 import lombok.*;
@@ -20,8 +21,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthRsp> register(@RequestBody AuthReq request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<AuthRsp> register(@RequestBody RegistrationReq request) {
+        AuthRsp rsp = authService.register(request);
+
+        return ResponseEntity.ok(rsp);
     }
 }
 

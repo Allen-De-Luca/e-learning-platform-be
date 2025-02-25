@@ -24,13 +24,11 @@ public class ReminderController {
     Appointment appointment;
 
     @PostMapping("/registration")
-    public void addUser(@RequestBody RegistrationReq registrationReq){
+    public void newContactUser(@RequestBody RegistrationReq registrationReq){
         contact = new Contact(registrationReq.getFirstName(),
                 registrationReq.getLastName(),
                 registrationReq.getEmail());
-        contact = reminderService.saveContact(contact);
-        user = new User(registrationReq.getUsername(), registrationReq.getPassword(), contact);
-        user = reminderService.saveUser(user);
+        reminderService.addContactUser(contact, registrationReq.getUserId());
     }
 
     @GetMapping("/allContacts")

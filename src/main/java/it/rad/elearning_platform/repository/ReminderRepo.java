@@ -3,16 +3,13 @@ package it.rad.elearning_platform.repository;
 import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
-import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.rsp.EventListRsp;
 
 import java.util.List;
 
 public interface ReminderRepo {
 
-    User saveUser(User User);
-
-    Contact saveContact(Contact contact);
+    void addContactUser(Contact contact, Long userId);
 
     void addContactEmail(Long contactId, List<String> emails);
 
