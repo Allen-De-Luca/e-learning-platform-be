@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/a")
+@RequestMapping("/api")
 public class ReminderController {
 
     @Autowired
@@ -22,14 +22,6 @@ public class ReminderController {
     Contact contact;
     Customer customer;
     Appointment appointment;
-
-    @PostMapping("/registration")
-    public void newContactUser(@RequestBody RegistrationReq registrationReq){
-        contact = new Contact(registrationReq.getFirstName(),
-                registrationReq.getLastName(),
-                registrationReq.getEmail());
-        reminderService.addContactUser(contact, registrationReq.getUserId());
-    }
 
     @GetMapping("/allContacts")
     public List<Contact> getAllContacts(){
