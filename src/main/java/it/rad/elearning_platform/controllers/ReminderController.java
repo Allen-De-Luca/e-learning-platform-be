@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "Authorization, Content-Type")
 @RestController
 @RequestMapping("/api")
 public class ReminderController {
