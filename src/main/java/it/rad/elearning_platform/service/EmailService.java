@@ -66,7 +66,7 @@ public class EmailService implements EmailRepo {
     public List<EmailData> getAllEmailData() {
 
         return jdbcTemplate.query(GET_ALL_EMAIL_DATA, (rs, rowNum) -> new EmailData(
-                rs.getDate("appointment_date").toLocalDate(),
+                rs.getTimestamp("appointment_date").toLocalDateTime(),
                 rs.getDate("reminder_date").toLocalDate(),
                 rs.getString("customer_first_name") + " " +
                         rs.getString("customer_last_name"),

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EmailData {
     LocalDateTime appointmentDate;
-    LocalDateTime reminderDate;
+    LocalDate reminderDate;
     String customerFullName;
     String customerCompany;
     String contactFullName;
