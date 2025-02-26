@@ -133,15 +133,22 @@ public class ReminderService implements ReminderRepo {
 
     @Override
     public List<Customer> getAllCustomerByContactId(Long contactId) {
-        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> new Customer(
-                rs.getLong("id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("phone_number"),
-                rs.getString("vat_number"),
-                rs.getString("company"),
-                Arrays.asList(rs.getString("emails").split(", "))
-        ), contactId);
+        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> {
+            String emails = rs.getString("emails");
+            List<String> emailList = (emails != null && emails.contains(", "))
+                    ? Arrays.asList(emails.split(", "))
+                    : (emails != null ? List.of(emails) : new ArrayList<>());
+
+            return new Customer(
+                    rs.getLong("id"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getString("phone_number"),
+                    rs.getString("vat_number"),
+                    rs.getString("company"),
+                    emailList
+            );
+        }, contactId);
     }
 
     @Override
