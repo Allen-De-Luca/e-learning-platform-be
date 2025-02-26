@@ -57,7 +57,7 @@ public class Query
                     "a.customer_id, " +
                     "a.contact_id, " +
                     "a.appointment_date, " +
-                    "a.reminder_date " +
+                    "a.reminder_date, " +
                     "a.notes " +
                     "FROM appointment a " +
                     "WHERE a.customer_id = ?;";
