@@ -15,30 +15,17 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class User implements UserDetails {
+
     private Long id;
+    private Long contactId;
     private String username;
     private String password;
-    private Contact contact;
 
-    public User(Long id, String username, String password){
+    public User(Long id, Long contactId, String username, String password){
         this.id=id;
+        this.contactId = contactId;
         this.username=username;
         this.password=password;
-    }
-
-    public User(String username, String pass, Contact c){
-        this.username=username;
-        this.password=pass;
-        this.contact=c;
-    }
-
-    public User(Long id, String username, String pass, Long contactId){
-        Contact c = new Contact();
-        c.setId(contactId);
-        this.setId(id);
-        this.setUsername(username);
-        this.setPassword(pass);
-        this.setContact(c);
     }
 
     public User(String username, String password){

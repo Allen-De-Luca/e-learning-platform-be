@@ -39,15 +39,14 @@ public class Query
     public static final String INSERT_CUSTOMER_TO_CONTACT=
             "INSERT INTO customer_to_contact(customer_id, contact_id) values (?,?)";
 
-    public static final String SELECT_ALL_CUSTOMERS_BY_USER_ID =
+    public static final String SELECT_ALL_CUSTOMERS_BY_CONTACT_ID =
             "SELECT c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company, " +
                     "GROUP_CONCAT(ce.email SEPARATOR ', ') AS emails " +
                     "FROM customer c " +
                     "JOIN customer_to_contact cc ON c.id = cc.customer_id " +
                     "JOIN contact ct ON cc.contact_id = ct.id " +
-                    "JOIN user u ON ct.id = u.contact_id " +
                     "LEFT JOIN customer_email ce ON c.id = ce.customer_id " +
-                    "WHERE u.id = ? " +
+                    "WHERE ct.id = ? " +
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
     public static final String INSERT_APPOINTMENT =
@@ -63,7 +62,7 @@ public class Query
                     "WHERE a.customer_id = ?;";
     public static final String DELETE_APPOINTMENT_BY_ID=
             "DELETE * FROM appointment WHERE id=?";
-    public static final String GET_ALL_APPOINTMENT_DATE_BY_USER_ID=
+    public static final String GET_ALL_APPOINTMENT_DATE_BY_CONTACT_ID =
             "SELECT a.id AS appointment_id, " +
                     "DATE_FORMAT(a.appointment_date, \"%Y-%m-%d\") as appointment_date, " +
                     "DATE_FORMAT(a.reminder_date, \"%Y-%m-%d\") as reminder_date, " +

@@ -11,4 +11,5 @@ import lombok.Data;
 public class AuthRsp {
     String token;
     Long userId;
+    Long contactId;
 }

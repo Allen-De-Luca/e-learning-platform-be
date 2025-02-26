@@ -132,8 +132,8 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public List<Customer> getAllCustomerByUserId(Long userId) {
-        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_USER_ID, (rs, rowNum) -> new Customer(
+    public List<Customer> getAllCustomerByContactId(Long contactId) {
+        return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> new Customer(
                 rs.getLong("id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
@@ -141,7 +141,7 @@ public class ReminderService implements ReminderRepo {
                 rs.getString("vat_number"),
                 rs.getString("company"),
                 Arrays.asList(rs.getString("emails").split(", "))
-        ), userId);
+        ), contactId);
     }
 
     @Override
@@ -162,14 +162,14 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public EventListRsp getEventsByUserId(Long userId) {
+    public EventListRsp getEventsByContactId(Long contactId) {
         List<Event> appointments = new ArrayList<>();
         List<Event> reminders = new ArrayList<>();
 
-        jdbcTemplate.query(GET_ALL_APPOINTMENT_DATE_BY_USER_ID, (rs) -> {
+        jdbcTemplate.query(GET_ALL_APPOINTMENT_DATE_BY_CONTACT_ID, (rs) -> {
             appointments.add(new Event(rs.getString("company") + " appointment", rs.getString("appointment_date")));
             reminders.add(new Event(rs.getString("company") + " reminder", rs.getString("reminder_date")));
-        }, userId);
+        }, contactId);
 
         return new EventListRsp(appointments, reminders);
     }

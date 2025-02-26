@@ -60,7 +60,7 @@ public class ReminderController {
 
     @GetMapping("/allCustomersByContact/{userId}")
     public List<Customer> getAllCustomersByUserId(@PathVariable Long userId){
-        return reminderService.getAllCustomerByUserId(userId);
+        return reminderService.getAllCustomerByContactId(userId);
     }
 
     @PostMapping("/addAppointment")
@@ -82,6 +82,6 @@ public class ReminderController {
 
     @GetMapping("/getEvents/{userId}")
     public EventListRsp getEventsByUserId(@PathVariable Long userId){
-        return reminderService.getEventsByUserId(userId);
+        return reminderService.getEventsByContactId(userId);
     }
 }

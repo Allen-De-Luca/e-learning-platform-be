@@ -24,13 +24,13 @@ public interface ReminderRepo {
 
     void deleteCustomerEmail(Long customerId, List<String> emails);
 
-    List<Customer> getAllCustomerByUserId(Long userId);
+    List<Customer> getAllCustomerByContactId(Long contactId);
 
     void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 
-    EventListRsp getEventsByUserId(Long userId);
+    EventListRsp getEventsByContactId(Long contactId);
 
     void deleteAppointmentById(Long appointmentId);
 

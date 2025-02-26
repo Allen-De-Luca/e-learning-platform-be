@@ -26,12 +26,13 @@ public class AuthService {
         Contact c = new Contact(registrationReq.getFirstName(),
                 registrationReq.getLastName(),
                 registrationReq.getEmail());
-        userService.addContactUser(c, userId);
+        Long contactId = userService.addContactUser(c, userId);
         var user = new User(registrationReq.getUsername(), newPassword);
         var token = jwtService.generateToken(user);
         return AuthRsp.builder()
                 .token(token)
                 .userId(userId)
+                .contactId(contactId)
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class AuthService {
         return AuthRsp.builder()
                 .token(token)
                 .userId(user.getId())
+                .contactId(user.getContactId())
                 .build();
     }
 

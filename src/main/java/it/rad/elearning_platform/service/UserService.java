@@ -47,6 +47,7 @@ public class UserService implements UserRepo{
                     FIND_USER_BY_USERNAME,
                     (rs, rowNum) -> new User(
                             rs.getLong("id"),
+                            rs.getLong("contact_id"),
                             rs.getString("username"),
                             rs.getString("user_password")
                     ),
@@ -58,7 +59,7 @@ public class UserService implements UserRepo{
     }
 
     @Override
-    public void addContactUser(Contact contact, Long userId) {
+    public Long addContactUser(Contact contact, Long userId) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -79,6 +80,8 @@ public class UserService implements UserRepo{
         );
 
         jdbcTemplate.update(UPDATE_USER_WITH_CONTACT_ID, contactId, userId);
+
+        return contactId;
 
     }
 

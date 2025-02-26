@@ -11,5 +11,5 @@ public interface UserRepo {
 
     Optional<User> findByUsername(String username);
 
-    void addContactUser(Contact contact, Long userId);
+    Long addContactUser(Contact contact, Long userId);
 }
