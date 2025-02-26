@@ -21,13 +21,6 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
-    public User(Long id, Long contactId, String username, String password){
-        this.id=id;
-        this.contactId = contactId;
-        this.username=username;
-        this.password=password;
-    }
-
     public User(String username, String password){
         this.username = username;
         this.password = password;
