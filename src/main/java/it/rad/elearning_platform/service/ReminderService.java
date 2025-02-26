@@ -165,8 +165,8 @@ public class ReminderService implements ReminderRepo {
                 rs.getLong("contact_id"),
                 rs.getTimestamp("appointment_date").toLocalDateTime(),
                 rs.getDate("reminder_date").toLocalDate(),
-                ""
-        ) , customerId);
+                rs.getString("notes")
+                ) , customerId);
     }
 
     @Override
