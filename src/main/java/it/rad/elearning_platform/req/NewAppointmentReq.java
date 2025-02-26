@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -12,8 +13,8 @@ import java.time.LocalDate;
 public class NewAppointmentReq {
 
     private Long customerId;
-    private Long userId;
-    private LocalDate appointmentDate;
+    private Long contactId;
+    private LocalDateTime appointmentDate;
     private int reminderDays;
 
 }

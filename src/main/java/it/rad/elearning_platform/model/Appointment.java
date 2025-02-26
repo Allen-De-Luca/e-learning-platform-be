@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,13 +15,13 @@ import java.time.LocalDate;
 public class Appointment {
     private Long id;
     private Long customerId;
-    private Long userId;
-    private LocalDate appointmentDate;
-    private LocalDate reminderDate;
+    private Long contactId;
+    private LocalDateTime appointmentDate;
+    private LocalDateTime reminderDate;
 
-    public Appointment (Long customerId, Long userId, LocalDate appointmentDate, int days){
+    public Appointment (Long customerId, Long contactId, LocalDateTime appointmentDate, int days){
         this.customerId = customerId;
-        this.userId = userId;
+        this.contactId = contactId;
         this.appointmentDate = appointmentDate;
         this.reminderDate = appointmentDate.minusDays(days);
     };

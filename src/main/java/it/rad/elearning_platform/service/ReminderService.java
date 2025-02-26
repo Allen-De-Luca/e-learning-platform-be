@@ -84,7 +84,7 @@ public class ReminderService implements ReminderRepo {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    INSERT_CUSTOMER_QUERY,
+                    INSERT_CUSTOMER,
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, customer.getFirstName());
@@ -97,7 +97,7 @@ public class ReminderService implements ReminderRepo {
 
         customer.setId(Objects.requireNonNull(id.getKey()).longValue());
 
-        jdbcTemplate.batchUpdate(INSERT_CUSTOMER_EMAIL_QUERY,
+        jdbcTemplate.batchUpdate(INSERT_CUSTOMER_EMAIL,
                 customer.getEmails(), customer.getEmails().size(), (ps, email) -> {
                     ps.setLong(1, customer.getId());
                     ps.setString(2, email);
@@ -139,8 +139,8 @@ public class ReminderService implements ReminderRepo {
 
     @Override
     public Appointment saveAppointment(Appointment appointment) {
-        jdbcTemplate.update(INSERT_APPOINTMENT_QUERY, appointment.getCustomerId(),
-                appointment.getUserId(),
+        jdbcTemplate.update(INSERT_APPOINTMENT, appointment.getCustomerId(),
+                appointment.getContactId(),
                 appointment.getAppointmentDate(),
                 appointment.getReminderDate());
         appointment.setId(Objects.requireNonNull(id.getKey()).longValue());
@@ -152,9 +152,9 @@ public class ReminderService implements ReminderRepo {
         return jdbcTemplate.query(SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID, (rs, rowNum) -> new Appointment(
                 rs.getLong("appointment_id"),
                 rs.getLong("customer_id"),
-                rs.getLong("user_id"),
-                rs.getDate("appointment_date").toLocalDate(),
-                rs.getDate("reminder_date").toLocalDate()
+                rs.getLong("contact_id"),
+                rs.getDate("appointment_date"),
+                rs.getDate("reminder_date")
         ) , customerId);
     }
 

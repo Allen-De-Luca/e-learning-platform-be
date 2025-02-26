@@ -27,10 +27,10 @@ public class Query
     public static final String DELETE_CONTACT_EMAIL_BY_CONTACT_ID=
             "DELETE * FROM contact_email WHERE contact_id = ? AND email = ?";
 
-    public static final String INSERT_CUSTOMER_QUERY=
+    public static final String INSERT_CUSTOMER =
             "INSERT INTO customer (first_name, last_name, phone_number, vat_number, company) " +
                     "VALUES (?,?,?,?,?)";
-    public static final String INSERT_CUSTOMER_EMAIL_QUERY=
+    public static final String INSERT_CUSTOMER_EMAIL =
             "INSERT INTO customer_email(customer_id, email) values (?,?)";
     public static final String ADD_CUSTOMER_EMAIL_BY_CUSTOMER_ID=
             "INSERT INTO customer_email (customer_id, email) values (?,?)";
@@ -50,7 +50,7 @@ public class Query
                     "WHERE u.id = ? " +
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
-    public static final String INSERT_APPOINTMENT_QUERY =
+    public static final String INSERT_APPOINTMENT =
             "INSERT INTO appointment(customer_id, user_id, appointment_date, reminderDate)" +
                     "VALUES (?,?,?,?)";
     public static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
