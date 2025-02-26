@@ -66,7 +66,7 @@ public class ReminderController {
     @PostMapping("/addAppointment")
     public void saveAppointment(@RequestBody NewAppointmentReq newAppointmentReq){
         appointment = new Appointment(newAppointmentReq.getCustomerId(),
-                newAppointmentReq.getUserId(), newAppointmentReq.getAppointmentDate(),
+                newAppointmentReq.getContactId(), newAppointmentReq.getAppointmentDate(),
                 newAppointmentReq.getReminderDays());
         appointment = reminderService.saveAppointment(appointment);
     }

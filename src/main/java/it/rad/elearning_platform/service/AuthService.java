@@ -46,6 +46,7 @@ public class AuthService {
         var token = jwtService.generateToken(user);
         return AuthRsp.builder()
                 .token(token)
+                .userId(user.getId())
                 .build();
     }
 
