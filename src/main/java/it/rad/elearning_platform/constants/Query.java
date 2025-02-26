@@ -51,12 +51,12 @@ public class Query
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
     public static final String INSERT_APPOINTMENT =
-            "INSERT INTO appointment(customer_id, user_id, appointment_date, reminderDate)" +
+            "INSERT INTO appointment(customer_id, contact_id, appointment_date, reminderDate)" +
                     "VALUES (?,?,?,?)";
     public static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
             "SELECT a.id AS appointment_id, " +
                     "a.customer_id, " +
-                    "a.user_id, " +
+                    "a.contact_id, " +
                     "a.appointment_date, " +
                     "a.reminder_date " +
                     "FROM appointment a " +
@@ -71,7 +71,7 @@ public class Query
                     "c.company " +
                     "FROM appointment a " +
                     "JOIN customer c ON a.customer_id = c.id " +
-                    "WHERE a.user_id = ?; ";
+                    "WHERE a.contact_id = ?; ";
 
     public static final String GET_ALL_EMAIL_DATA=
             "SELECT " +

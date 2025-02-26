@@ -30,13 +30,12 @@ public class ReminderController {
     }
 
     @PostMapping("/addCustomer/{contactId}")
-    public void addCustomer(@RequestBody RegisterCustomerReq registerCustomerReq,
+    public void addCustomer(@RequestBody NewCustomerReq newCustomerReq,
                             @PathVariable Long contactId){
-        customer = new Customer(registerCustomerReq.getFirstName(),
-                registerCustomerReq.getLastName(), registerCustomerReq.getPhoneNumber(),
-                registerCustomerReq.getVatNumber(), registerCustomerReq.getCompany(),
-                registerCustomerReq.getEmail());
-        customer = reminderService.saveCustomer(customer, contactId);
+        reminderService.saveCustomer(newCustomerReq.getFirstName(),
+                newCustomerReq.getLastName(), newCustomerReq.getPhoneNumber(),
+                newCustomerReq.getVatNumber(), newCustomerReq.getCompany(),
+                newCustomerReq.getEmail(), contactId);
     }
 
     @PostMapping("/addContactEmail")
@@ -66,10 +65,9 @@ public class ReminderController {
 
     @PostMapping("/addAppointment")
     public void saveAppointment(@RequestBody NewAppointmentReq newAppointmentReq){
-        appointment = new Appointment(newAppointmentReq.getCustomerId(),
+        reminderService.saveAppointment(newAppointmentReq.getCustomerId(),
                 newAppointmentReq.getContactId(), newAppointmentReq.getAppointmentDate(),
                 newAppointmentReq.getReminderDays());
-        appointment = reminderService.saveAppointment(appointment);
     }
 
     @GetMapping("/allAppointmentByCustomerId/{customerId}")

@@ -5,6 +5,7 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.rsp.EventListRsp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReminderRepo {
@@ -17,7 +18,7 @@ public interface ReminderRepo {
 
     List<Contact> getAllContacts();
 
-    Customer saveCustomer(Customer customer, Long contactId);
+    void saveCustomer(String firstName, String lastName, String phoneNumber, String vatNumber, String company, List<String> emails, Long contactId);
 
     void addCustomerEmail(Long customerId, List<String> emails);
 
@@ -25,7 +26,7 @@ public interface ReminderRepo {
 
     List<Customer> getAllCustomerByUserId(Long userId);
 
-    Appointment saveAppointment(Appointment appointment);
+    void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 
