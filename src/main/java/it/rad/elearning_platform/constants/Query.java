@@ -58,7 +58,7 @@ public class Query
                     "a.contact_id, " +
                     "a.appointment_date, " +
                     "a.reminder_date " +
-                    "a.notes" +
+                    "a.notes " +
                     "FROM appointment a " +
                     "WHERE a.customer_id = ?;";
     public static final String DELETE_APPOINTMENT_BY_ID=
