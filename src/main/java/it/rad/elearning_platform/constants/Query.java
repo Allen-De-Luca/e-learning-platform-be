@@ -50,8 +50,8 @@ public class Query
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
     public static final String INSERT_APPOINTMENT =
-            "INSERT INTO appointment(customer_id, contact_id, appointment_date, reminderDate)" +
-                    "VALUES (?,?,?,?)";
+            "INSERT INTO appointment(customer_id, contact_id, appointment_date, reminderDate, notes)" +
+                    "VALUES (?,?,?,?,?)";
     public static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
             "SELECT a.id AS appointment_id, " +
                     "a.customer_id, " +
@@ -66,6 +66,7 @@ public class Query
             "SELECT a.id AS appointment_id, " +
                     "DATE_FORMAT(a.appointment_date, \"%Y-%m-%d\") as appointment_date, " +
                     "DATE_FORMAT(a.reminder_date, \"%Y-%m-%d\") as reminder_date, " +
+                    "a.notes AS notes, " +
                     "c.id AS customer_id, " +
                     "c.company " +
                     "FROM appointment a " +

@@ -67,7 +67,7 @@ public class ReminderController {
     public void saveAppointment(@RequestBody NewAppointmentReq newAppointmentReq){
         reminderService.saveAppointment(newAppointmentReq.getCustomerId(),
                 newAppointmentReq.getContactId(), newAppointmentReq.getAppointmentDate(),
-                newAppointmentReq.getReminderDays());
+                newAppointmentReq.getReminderDays(), newAppointmentReq.getNotes());
     }
 
     @GetMapping("/allAppointmentByCustomerId/{customerId}")

@@ -152,9 +152,9 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days) {
+    public void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes) {
         LocalDate reminderDate = appointmentDate.toLocalDate().minusDays(days);
-        jdbcTemplate.update(INSERT_APPOINTMENT, customerId, contactId, appointmentDate, reminderDate);
+        jdbcTemplate.update(INSERT_APPOINTMENT, customerId, contactId, appointmentDate, reminderDate, notes);
     }
 
     @Override
@@ -164,7 +164,8 @@ public class ReminderService implements ReminderRepo {
                 rs.getLong("customer_id"),
                 rs.getLong("contact_id"),
                 rs.getTimestamp("appointment_date").toLocalDateTime(),
-                rs.getDate("reminder_date").toLocalDate()
+                rs.getDate("reminder_date").toLocalDate(),
+                ""
         ) , customerId);
     }
 

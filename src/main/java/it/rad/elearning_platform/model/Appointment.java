@@ -18,12 +18,14 @@ public class Appointment {
     private Long contactId;
     private LocalDateTime appointmentDate;
     private LocalDate reminderDate;
+    private String notes;
 
-    public Appointment (Long customerId, Long contactId, LocalDateTime appointmentDate, int days){
+    public Appointment (Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes){
         this.customerId = customerId;
         this.contactId = contactId;
         this.appointmentDate = appointmentDate;
         this.reminderDate = appointmentDate.toLocalDate().minusDays(days);
+        this.notes=notes;
     };
 
 }

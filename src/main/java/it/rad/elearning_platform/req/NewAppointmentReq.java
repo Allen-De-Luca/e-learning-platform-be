@@ -16,5 +16,5 @@ public class NewAppointmentReq {
     private Long contactId;
     private LocalDateTime appointmentDate;
     private int reminderDays;
-
+    private String notes;
 }

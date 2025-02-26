@@ -26,7 +26,7 @@ public interface ReminderRepo {
 
     List<Customer> getAllCustomerByContactId(Long contactId);
 
-    void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days);
+    void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 
