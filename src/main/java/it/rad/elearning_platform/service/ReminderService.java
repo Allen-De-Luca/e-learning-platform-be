@@ -164,8 +164,8 @@ public class ReminderService implements ReminderRepo {
     public void saveAppointments(List<AppointmentReq> appointments) {
         jdbcTemplate.batchUpdate(INSERT_APPOINTMENT, appointments, appointments.size(), (ps, appointmentInfo) ->{
             LocalDate reminderDate = appointmentInfo.getAppointmentDate().toLocalDate().minusDays(appointmentInfo.getReminderDays());
-            ps.setLong(1, appointmentInfo.getContactId());
-            ps.setLong(2, appointmentInfo.getCustomerId());
+            ps.setLong(1, appointmentInfo.getCustomerId());
+            ps.setLong(2, appointmentInfo.getContactId());
             ps.setTimestamp(3, Timestamp.valueOf(appointmentInfo.getAppointmentDate()));
             ps.setDate(4, Date.valueOf(reminderDate));
             ps.setString(5, appointmentInfo.getNotes());
