@@ -73,6 +73,10 @@ public class Query
                     "FROM appointment a " +
                     "JOIN customer c ON a.customer_id = c.id " +
                     "WHERE a.contact_id = ?; ";
+    public static final String SAVE_APPOINTMENT_NOTE =
+            "UPDATE appointment a " +
+                    "SET a.notes = ? " +
+                    "WHERE a.id = ?;";
 
     public static final String GET_ALL_EMAIL_DATA=
             "SELECT " +

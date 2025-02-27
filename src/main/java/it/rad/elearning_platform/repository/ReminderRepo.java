@@ -30,6 +30,8 @@ public interface ReminderRepo {
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 
+    void saveAppointmentNote(Long appointmentId, String note);
+
     EventListRsp getEventsByContactId(Long contactId);
 
     void deleteAppointmentById(Long appointmentId);

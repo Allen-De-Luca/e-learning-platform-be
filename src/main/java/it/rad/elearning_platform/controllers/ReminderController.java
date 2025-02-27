@@ -80,6 +80,11 @@ public class ReminderController {
         reminderService.deleteAppointmentById(appointmentId);
     }
 
+    @PostMapping("/addAppointmentNote")
+    public void addAppointmentNote(@RequestBody NewNoteReq newNoteReq){
+        reminderService.saveAppointmentNote(newNoteReq.getAppointmentId(), newNoteReq.getNote());
+    }
+
     @GetMapping("/getEvents/{userId}")
     public EventListRsp getEventsByUserId(@PathVariable Long userId){
         return reminderService.getEventsByContactId(userId);

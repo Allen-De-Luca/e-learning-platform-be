@@ -170,6 +170,11 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
+    public void saveAppointmentNote(Long appointmentId, String note) {
+        jdbcTemplate.update(SAVE_APPOINTMENT_NOTE, note, appointmentId);
+    }
+
+    @Override
     public EventListRsp getEventsByContactId(Long contactId) {
         List<Event> appointments = new ArrayList<>();
         List<Event> reminders = new ArrayList<>();
