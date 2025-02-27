@@ -5,6 +5,7 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.repository.ReminderRepo;
 import it.rad.elearning_platform.model.Event;
+import it.rad.elearning_platform.req.AppointmentReq;
 import it.rad.elearning_platform.rsp.EventListRsp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,8 +13,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -155,6 +158,19 @@ public class ReminderService implements ReminderRepo {
     public void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes) {
         LocalDate reminderDate = appointmentDate.toLocalDate().minusDays(days);
         jdbcTemplate.update(INSERT_APPOINTMENT, customerId, contactId, appointmentDate, reminderDate, notes);
+    }
+
+    @Override
+    public void saveAppointments(List<AppointmentReq> appointments) {
+        jdbcTemplate.batchUpdate(INSERT_APPOINTMENT, appointments, appointments.size(), (ps, appointmentInfo) ->{
+            LocalDate reminderDate = appointmentInfo.getAppointmentDate().toLocalDate().minusDays(appointmentInfo.getReminderDays());
+            ps.setLong(1, appointmentInfo.getContactId());
+            ps.setLong(2, appointmentInfo.getCustomerId());
+            ps.setTimestamp(3, Timestamp.valueOf(appointmentInfo.getAppointmentDate()));
+            ps.setDate(4, Date.valueOf(reminderDate));
+            ps.setString(5, appointmentInfo.getNotes());
+
+        });
     }
 
     @Override

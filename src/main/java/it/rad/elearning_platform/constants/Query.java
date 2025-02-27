@@ -62,7 +62,7 @@ public class Query
                     "FROM appointment a " +
                     "WHERE a.customer_id = ?;";
     public static final String DELETE_APPOINTMENT_BY_ID=
-            "DELETE * FROM appointment WHERE id=?";
+            "DELETE FROM appointment WHERE id=?";
     public static final String GET_ALL_APPOINTMENT_DATE_BY_CONTACT_ID =
             "SELECT a.id AS appointment_id, " +
                     "DATE_FORMAT(a.appointment_date, \"%Y-%m-%d\") as appointment_date, " +

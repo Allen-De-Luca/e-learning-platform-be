@@ -3,6 +3,7 @@ package it.rad.elearning_platform.repository;
 import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
+import it.rad.elearning_platform.req.AppointmentReq;
 import it.rad.elearning_platform.rsp.EventListRsp;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ public interface ReminderRepo {
     List<Customer> getAllCustomerByContactId(Long contactId);
 
     void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes);
+
+    void saveAppointments(List<AppointmentReq> appointments);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 

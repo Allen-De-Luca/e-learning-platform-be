@@ -64,10 +64,15 @@ public class ReminderController {
     }
 
     @PostMapping("/addAppointment")
-    public void saveAppointment(@RequestBody NewAppointmentReq newAppointmentReq){
-        reminderService.saveAppointment(newAppointmentReq.getCustomerId(),
-                newAppointmentReq.getContactId(), newAppointmentReq.getAppointmentDate(),
-                newAppointmentReq.getReminderDays(), newAppointmentReq.getNotes());
+    public void saveAppointment(@RequestBody AppointmentReq appointmentReq){
+        reminderService.saveAppointment(appointmentReq.getCustomerId(),
+                appointmentReq.getContactId(), appointmentReq.getAppointmentDate(),
+                appointmentReq.getReminderDays(), appointmentReq.getNotes());
+    }
+
+    @PostMapping("/newAppointment")
+    public void newAppointments(@RequestBody List<AppointmentReq> appointments){
+        reminderService.saveAppointments(appointments);
     }
 
     @GetMapping("/allAppointmentByCustomerId/{customerId}")
