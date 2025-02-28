@@ -7,12 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Arrays;
 
 import static it.rad.elearning_platform.constants.Query.*;
 
+@Service
 public class EmailService implements EmailRepo {
 
     @Autowired
@@ -23,8 +28,9 @@ public class EmailService implements EmailRepo {
         this.mailSender = mailSender;
     }
 
+    @Scheduled(cron = "0 0 8 * * ?")
     public void checkAndSendReminderEmails() {
-        List<EmailData> appointments = getAllEmailData();
+        List<EmailData> appointments =  getAllEmailData();
 
         for (EmailData appointment : appointments) {
             sendEmail(appointment);
@@ -44,7 +50,8 @@ public class EmailService implements EmailRepo {
                         appointment.getCustomerFullName() + " dell'Azienda " + appointment.getCustomerCompany() + " il " +
                         appointment.getAppointmentDate());
             }
-            else if (appointment.getAppointmentDate().equals(LocalDate.now().plusDays(1))) {
+
+            if (appointment.getAppointmentDate().toLocalDate().equals(LocalDate.now().plusDays(1))) {
                 helper.setSubject("⏳ Domani hai un appuntamento con " + appointment.getCustomerFullName());
                 helper.setText("Un promemoria che domani hai un appuntamento con " +
                         appointment.getCustomerFullName() + " dell'Azienda " + appointment.getCustomerCompany() + " il " +
@@ -73,7 +80,8 @@ public class EmailService implements EmailRepo {
                 rs.getString("customer_company"),
                 rs.getString("contact_first_name") + " " +
                         rs.getString("contact_last_name"),
-                Arrays.asList(rs.getString("emails").split(", "))
+//                Arrays.asList(rs.getString("contact_emails").split(", "))
+                Arrays.asList(rs.getString("contact_emails"))
         ));
     }
 }
