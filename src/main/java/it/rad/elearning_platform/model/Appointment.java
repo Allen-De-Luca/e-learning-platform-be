@@ -14,15 +14,13 @@ import java.time.LocalDateTime;
 @Component
 public class Appointment {
     private Long id;
-    private Long customerId;
-    private Long contactId;
+    private Long customerToContactId;
     private LocalDateTime appointmentDate;
     private LocalDate reminderDate;
     private String notes;
 
-    public Appointment (Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes){
-        this.customerId = customerId;
-        this.contactId = contactId;
+    public Appointment (Long customerToContactId, LocalDateTime appointmentDate, int days, String notes){
+        this.customerToContactId = customerToContactId;
         this.appointmentDate = appointmentDate;
         this.reminderDate = appointmentDate.toLocalDate().minusDays(days);
         this.notes=notes;

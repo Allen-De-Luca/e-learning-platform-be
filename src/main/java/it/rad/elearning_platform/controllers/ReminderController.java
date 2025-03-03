@@ -3,7 +3,6 @@ package it.rad.elearning_platform.controllers;
 import it.rad.elearning_platform.model.Appointment;
 import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
-import it.rad.elearning_platform.model.User;
 import it.rad.elearning_platform.req.*;
 import it.rad.elearning_platform.rsp.EventListRsp;
 import it.rad.elearning_platform.service.ReminderService;
@@ -19,10 +18,6 @@ public class ReminderController {
 
     @Autowired
     ReminderService reminderService;
-    User user;
-    Contact contact;
-    Customer customer;
-    Appointment appointment;
 
     @GetMapping("/allContacts")
     public List<Contact> getAllContacts(){
@@ -65,14 +60,12 @@ public class ReminderController {
 
     @PostMapping("/addAppointment")
     public void saveAppointment(@RequestBody AppointmentReq appointmentReq){
-        reminderService.saveAppointment(appointmentReq.getCustomerId(),
-                appointmentReq.getContactId(), appointmentReq.getAppointmentDate(),
-                appointmentReq.getReminderDays(), appointmentReq.getNotes());
-    }
+        Long customerToContactId = reminderService.findCustomerToContactId(appointmentReq.getCustomerId(),
+                appointmentReq.getContactId());
 
-    @PostMapping("/newAppointment")
-    public void newAppointments(@RequestBody List<AppointmentReq> appointments){
-        reminderService.saveAppointments(appointments);
+        reminderService.saveAppointment(customerToContactId,
+                appointmentReq.getAppointmentDate(),
+                appointmentReq.getReminderDays(), appointmentReq.getNotes());
     }
 
     @GetMapping("/allAppointmentByCustomerId/{customerId}")

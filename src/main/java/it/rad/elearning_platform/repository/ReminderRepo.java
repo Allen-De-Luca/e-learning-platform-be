@@ -25,11 +25,11 @@ public interface ReminderRepo {
 
     void deleteCustomerEmail(Long customerId, List<String> emails);
 
+    Long findCustomerToContactId(Long customerId, Long contactId);
+
     List<Customer> getAllCustomerByContactId(Long contactId);
 
-    void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes);
-
-    void saveAppointments(List<AppointmentReq> appointments);
+    void saveAppointment(Long customerToContactId, LocalDateTime appointmentDate, int days, String notes);
 
     List<Appointment> getAllAppointmentByCustomer(Long customerId);
 

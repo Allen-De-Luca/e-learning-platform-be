@@ -135,6 +135,14 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
+    public Long findCustomerToContactId(Long customerId, Long contactId) {
+        return jdbcTemplate.queryForObject(FIND_CUSTOMER_TO_CONTACT_ID,
+                Long.class,
+                customerId,
+                contactId);
+    }
+
+    @Override
     public List<Customer> getAllCustomerByContactId(Long contactId) {
         return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> {
             String emails = rs.getString("emails");
@@ -155,30 +163,16 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes) {
+    public void saveAppointment(Long customerToContactId, LocalDateTime appointmentDate, int days, String notes) {
         LocalDate reminderDate = appointmentDate.toLocalDate().minusDays(days);
-        jdbcTemplate.update(INSERT_APPOINTMENT, customerId, contactId, appointmentDate, reminderDate, notes);
-    }
-
-    @Override
-    public void saveAppointments(List<AppointmentReq> appointments) {
-        jdbcTemplate.batchUpdate(INSERT_APPOINTMENT, appointments, appointments.size(), (ps, appointmentInfo) ->{
-            LocalDate reminderDate = appointmentInfo.getAppointmentDate().toLocalDate().minusDays(appointmentInfo.getReminderDays());
-            ps.setLong(1, appointmentInfo.getCustomerId());
-            ps.setLong(2, appointmentInfo.getContactId());
-            ps.setTimestamp(3, Timestamp.valueOf(appointmentInfo.getAppointmentDate()));
-            ps.setDate(4, Date.valueOf(reminderDate));
-            ps.setString(5, appointmentInfo.getNotes());
-
-        });
+        jdbcTemplate.update(INSERT_APPOINTMENT, customerToContactId, appointmentDate, reminderDate, notes);
     }
 
     @Override
     public List<Appointment> getAllAppointmentByCustomer(Long customerId) {
         return jdbcTemplate.query(SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID, (rs, rowNum) -> new Appointment(
                 rs.getLong("appointment_id"),
-                rs.getLong("customer_id"),
-                rs.getLong("contact_id"),
+                rs.getLong("customer_to_contact_id"),
                 rs.getTimestamp("appointment_date").toLocalDateTime(),
                 rs.getDate("reminder_date").toLocalDate(),
                 rs.getString("notes")
