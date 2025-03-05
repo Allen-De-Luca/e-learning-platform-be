@@ -58,12 +58,12 @@ public class ReminderController {
         return reminderService.getAllCustomerByContactId(userId);
     }
 
-    @PostMapping("/addAppointment")
-    public void saveAppointment(@RequestBody AppointmentReq appointmentReq){
+    @GetMapping("/addAppointment")
+    public Long saveAppointment(@RequestBody AppointmentReq appointmentReq){
         Long customerToContactId = reminderService.findCustomerToContactId(appointmentReq.getCustomerId(),
                 appointmentReq.getContactId());
 
-        reminderService.saveAppointment(customerToContactId,
+        return reminderService.saveAppointment(customerToContactId,
                 appointmentReq.getAppointmentDate(),
                 appointmentReq.getReminderDays(), appointmentReq.getNotes());
     }

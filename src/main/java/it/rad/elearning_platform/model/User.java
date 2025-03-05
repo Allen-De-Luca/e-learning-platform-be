@@ -28,6 +28,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public User(Long id, Long contactId, String username, String password){
+        this.id=id;
+        this.contactId=contactId;
+        this.username = username;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
