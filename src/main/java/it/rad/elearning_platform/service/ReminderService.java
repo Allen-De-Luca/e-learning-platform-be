@@ -5,7 +5,6 @@ import it.rad.elearning_platform.model.Contact;
 import it.rad.elearning_platform.model.Customer;
 import it.rad.elearning_platform.repository.ReminderRepo;
 import it.rad.elearning_platform.model.Event;
-import it.rad.elearning_platform.req.AppointmentReq;
 import it.rad.elearning_platform.rsp.EventListRsp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -135,6 +134,14 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
+    public Long findCustomerToContactId(Long customerId, Long contactId) {
+        return jdbcTemplate.queryForObject(FIND_CUSTOMER_TO_CONTACT_ID,
+                Long.class,
+                customerId,
+                contactId);
+    }
+
+    @Override
     public List<Customer> getAllCustomerByContactId(Long contactId) {
         return jdbcTemplate.query(SELECT_ALL_CUSTOMERS_BY_CONTACT_ID, (rs, rowNum) -> {
             String emails = rs.getString("emails");
@@ -155,30 +162,31 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public void saveAppointment(Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes) {
+    public Long saveAppointment(Long customerToContactId, LocalDateTime appointmentDate, int days, String notes) {
         LocalDate reminderDate = appointmentDate.toLocalDate().minusDays(days);
-        jdbcTemplate.update(INSERT_APPOINTMENT, customerId, contactId, appointmentDate, reminderDate, notes);
-    }
+        //jdbcTemplate.update(INSERT_APPOINTMENT, customerToContactId, appointmentDate, reminderDate, notes);
 
-    @Override
-    public void saveAppointments(List<AppointmentReq> appointments) {
-        jdbcTemplate.batchUpdate(INSERT_APPOINTMENT, appointments, appointments.size(), (ps, appointmentInfo) ->{
-            LocalDate reminderDate = appointmentInfo.getAppointmentDate().toLocalDate().minusDays(appointmentInfo.getReminderDays());
-            ps.setLong(1, appointmentInfo.getContactId());
-            ps.setLong(2, appointmentInfo.getCustomerId());
-            ps.setTimestamp(3, Timestamp.valueOf(appointmentInfo.getAppointmentDate()));
-            ps.setDate(4, Date.valueOf(reminderDate));
-            ps.setString(5, appointmentInfo.getNotes());
+        id = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    INSERT_APPOINTMENT,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setLong(1, customerToContactId);
+            ps.setTimestamp(2, Timestamp.valueOf(appointmentDate)); // Conversione corretta
+            ps.setDate(3, Date.valueOf(reminderDate));
+            ps.setString(4, notes);
+            return ps;
+        }, id);
 
-        });
+        return Objects.requireNonNull(id.getKey()).longValue();
     }
 
     @Override
     public List<Appointment> getAllAppointmentByCustomer(Long customerId) {
         return jdbcTemplate.query(SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID, (rs, rowNum) -> new Appointment(
                 rs.getLong("appointment_id"),
-                rs.getLong("customer_id"),
-                rs.getLong("contact_id"),
+                rs.getLong("customer_to_contact_id"),
                 rs.getTimestamp("appointment_date").toLocalDateTime(),
                 rs.getDate("reminder_date").toLocalDate(),
                 rs.getString("notes")

@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Arrays;
 
 import static it.rad.elearning_platform.constants.Query.*;
 
+@Service
 public class EmailService implements EmailRepo {
 
     @Autowired
@@ -23,8 +27,9 @@ public class EmailService implements EmailRepo {
         this.mailSender = mailSender;
     }
 
+    @Scheduled(cron = "0 0 8 * * ?")
     public void checkAndSendReminderEmails() {
-        List<EmailData> appointments = getAllEmailData();
+        List<EmailData> appointments =  getAllEmailData();
 
         for (EmailData appointment : appointments) {
             sendEmail(appointment);
@@ -34,33 +39,49 @@ public class EmailService implements EmailRepo {
     private void sendEmail(EmailData appointment) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             List<String> contactEmail = appointment.getContactEmail();
 
-            if (appointment.getReminderDate().equals(LocalDate.now())) {
-                helper.setSubject("🔔 Reminder: Appuntamento con " + appointment.getCustomerFullName());
-                helper.setText("Oggi è il giorno del promemoria per il tuo appuntamento con " +
-                        appointment.getCustomerFullName() + " dell'Azienda " + appointment.getCustomerCompany() + " il " +
-                        appointment.getAppointmentDate());
-            }
-            else if (appointment.getAppointmentDate().equals(LocalDate.now().plusDays(1))) {
-                helper.setSubject("⏳ Domani hai un appuntamento con " + appointment.getCustomerFullName());
-                helper.setText("Un promemoria che domani hai un appuntamento con " +
-                        appointment.getCustomerFullName() + " dell'Azienda " + appointment.getCustomerCompany() + " il " +
-                        appointment.getAppointmentDate());
+            String subject = "";
+            String htmlContent = "";
+
+            if (appointment.getAppointmentDate().toLocalDate().equals(LocalDate.now().plusDays(1))) {
+                subject = "⏳ Domani hai un appuntamento con " + appointment.getCustomerFullName();
+                htmlContent = "<html><body>"
+                        + "<h2>Promemoria appuntamento</h2>"
+                        + "<p>Un promemoria che domani hai un appuntamento con <strong>"
+                        + appointment.getCustomerFullName() + "</strong> dell'azienda <strong>"
+                        + appointment.getCustomerCompany() + "</strong> il <strong>"
+                        + appointment.getAppointmentDate().toLocalDate() + "</strong> alle ore <strong>"
+                        + appointment.getAppointmentDate().toLocalTime() + "</strong></p>"
+                        + "</body></html>";
+            } else if (appointment.getReminderDate().equals(LocalDate.now())) {
+                subject = "🔔 Reminder: Appuntamento con " + appointment.getCustomerFullName();
+                htmlContent = "<html><body>"
+                        + "<h2>Reminder Appuntamento</h2>"
+                        + "<p>Oggi è il giorno del promemoria per il tuo appuntamento con <strong>"
+                        + appointment.getCustomerFullName() + "</strong> dell'azienda <strong>"
+                        + appointment.getCustomerCompany() + "</strong> il <strong>"
+                        + appointment.getAppointmentDate().toLocalDate() + "</strong> alle ore <strong>"
+                        + appointment.getAppointmentDate().toLocalTime() + "</strong></p>"
+                        + "</body></html>";
             }
 
-            for(String emails : contactEmail)
-            {
-                helper.setTo(emails);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true); // Il secondo parametro true indica che è HTML
+
+            for (String email : contactEmail) {
+                helper.setTo(email);
                 mailSender.send(message);
             }
-            System.out.println("Email inviata");
+
+            System.out.println("Email inviata con successo!");
         } catch (Exception e) {
             System.err.println("Errore nell'invio dell'email: " + e.getMessage());
         }
     }
+
 
     @Override
     public List<EmailData> getAllEmailData() {
@@ -73,7 +94,8 @@ public class EmailService implements EmailRepo {
                 rs.getString("customer_company"),
                 rs.getString("contact_first_name") + " " +
                         rs.getString("contact_last_name"),
-                Arrays.asList(rs.getString("emails").split(", "))
+//                Arrays.asList(rs.getString("contact_emails").split(", "))
+                Arrays.asList(rs.getString("contact_emails"))
         ));
     }
 }

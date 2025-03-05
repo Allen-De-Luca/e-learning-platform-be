@@ -15,17 +15,15 @@ import java.time.LocalDateTime;
 @Component
 public class Appointment {
     private Long id;
-    private Long customerId;
-    private Long contactId;
+    private Long customerToContactId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime appointmentDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate reminderDate;
     private String notes;
 
-    public Appointment (Long customerId, Long contactId, LocalDateTime appointmentDate, int days, String notes){
-        this.customerId = customerId;
-        this.contactId = contactId;
+    public Appointment (Long customerToContactId, LocalDateTime appointmentDate, int days, String notes){
+        this.customerToContactId = customerToContactId;
         this.appointmentDate = appointmentDate;
         this.reminderDate = appointmentDate.toLocalDate().minusDays(days);
         this.notes=notes;
