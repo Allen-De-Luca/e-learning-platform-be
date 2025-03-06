@@ -54,7 +54,7 @@ public class Query
                     "GROUP BY c.id, c.first_name, c.last_name, c.phone_number, c.vat_number, c.company;";
 
     public static final String INSERT_APPOINTMENT =
-            "INSERT INTO appointment(customer_to_contact_id, appointment_date, reminderDate, notes)" +
+            "INSERT INTO appointment(customer_to_contact_id, appointment_date, reminder_date, notes)" +
                     "VALUES (?,?,?,?)";
     public static final String UPDATE_APPOINTMENT =
             "UPDATE appointment SET " +
