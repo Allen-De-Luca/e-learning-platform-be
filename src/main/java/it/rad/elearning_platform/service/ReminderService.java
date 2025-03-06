@@ -166,7 +166,7 @@ public class ReminderService implements ReminderRepo {
 
         Long customerToContactId = findCustomerToContactId(customerId, contactId);
 
-        if(appointmentId == null) {
+        if(appointmentId < 1) {
             id = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(
