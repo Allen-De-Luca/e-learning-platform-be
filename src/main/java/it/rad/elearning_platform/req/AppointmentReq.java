@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,9 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AppointmentReq {
 
+    private Long appId;
     private Long customerId;
     private Long contactId;
     private LocalDateTime appointmentDate;
-    private int reminderDays;
+    private LocalDate reminderDate;
     private String notes;
 }

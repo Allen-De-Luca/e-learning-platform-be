@@ -56,6 +56,14 @@ public class Query
     public static final String INSERT_APPOINTMENT =
             "INSERT INTO appointment(customer_to_contact_id, appointment_date, reminderDate, notes)" +
                     "VALUES (?,?,?,?)";
+    public static final String UPDATE_APPOINTMENT =
+            "UPDATE appointment SET " +
+                    "customer_to_contact_id = ?, " +
+                    "appointment_date = ?, " +
+                    "reminder_date = ?, " +
+                    "notes = ? " +
+                    "WHERE id = ?;";
+
     public static final String SELECT_ALL_APPOINTMENT_BY_CUSTOMER_ID =
             "SELECT a.id AS appointment_id, " +
                     "a.customer_to_contact_id, " +

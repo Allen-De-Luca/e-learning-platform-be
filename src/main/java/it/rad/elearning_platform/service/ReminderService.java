@@ -162,24 +162,31 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public Long saveAppointment(Long customerToContactId, LocalDateTime appointmentDate, int days, String notes) {
-        LocalDate reminderDate = appointmentDate.toLocalDate().minusDays(days);
-        //jdbcTemplate.update(INSERT_APPOINTMENT, customerToContactId, appointmentDate, reminderDate, notes);
+    public Long saveAppointment(Long appointmentId, Long customerId, Long contactId, LocalDateTime appointmentDate, LocalDate reminderDate, String notes) {
 
-        id = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    INSERT_APPOINTMENT,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setLong(1, customerToContactId);
-            ps.setTimestamp(2, Timestamp.valueOf(appointmentDate)); // Conversione corretta
-            ps.setDate(3, Date.valueOf(reminderDate));
-            ps.setString(4, notes);
-            return ps;
-        }, id);
+        Long customerToContactId = findCustomerToContactId(customerId, contactId);
 
-        return Objects.requireNonNull(id.getKey()).longValue();
+        if(appointmentId == null) {
+            id = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        INSERT_APPOINTMENT,
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setLong(1, customerToContactId);
+                ps.setTimestamp(2, Timestamp.valueOf(appointmentDate)); // Conversione corretta
+                ps.setDate(3, Date.valueOf(reminderDate));
+                ps.setString(4, notes);
+                return ps;
+            }, id);
+
+            return Objects.requireNonNull(id.getKey()).longValue();
+        } else {
+
+            jdbcTemplate.update(UPDATE_APPOINTMENT, customerToContactId, appointmentDate, reminderDate, notes, appointmentId);
+
+            return appointmentId;
+        }
     }
 
     @Override
