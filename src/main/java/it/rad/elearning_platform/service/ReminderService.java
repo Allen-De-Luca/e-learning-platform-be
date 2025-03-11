@@ -33,31 +33,6 @@ public class ReminderService implements ReminderRepo {
     private KeyHolder id;
 
     @Override
-    public void addContactUser(Contact contact, Long userId) {
-        id = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    ADD_CONTACT,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setString(1, contact.getFirstName());
-            ps.setString(2, contact.getLastName());
-            return ps;
-        }, id);
-
-        Long contactId = Objects.requireNonNull(id.getKey()).longValue();
-        jdbcTemplate.batchUpdate(ADD_CONTACT_EMAIL,
-            contact.getEmails(), contact.getEmails().size(), (ps, email) -> {
-                ps.setLong(1, contactId);
-                ps.setString(2, email);
-            }
-        );
-
-        jdbcTemplate.update(UPDATE_USER_WITH_CONTACT_ID, contactId, userId);
-
-    }
-
-    @Override
     public void addContactEmail(Long contactId, List<String> emails) {
         jdbcTemplate.batchUpdate(ADD_CONTACT_EMAIL_BY_CONTACT_ID, emails, emails.size(), (ps, email) ->{
             ps.setLong(1, contactId);
@@ -84,12 +59,9 @@ public class ReminderService implements ReminderRepo {
     }
 
     @Override
-    public void saveCustomer(String firstName,
-                             String lastName,
-                             String phoneNumber,
-                             String vatNumber,
-                             String company,
-                             List<String> emails,
+    public void saveCustomer(String firstName, String lastName,
+                             String phoneNumber, String vatNumber,
+                             String company, List<String> emails,
                              Long contactId) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

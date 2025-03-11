@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -25,8 +26,10 @@ public class UserService implements UserRepo{
     KeyHolder id;
 
     @Override
+    @Transactional
     public Long saveUser(String username, String password) {
         id = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     INSERT_USER_QUERY,
@@ -59,6 +62,7 @@ public class UserService implements UserRepo{
     }
 
     @Override
+    @Transactional
     public Long addContactUser(Contact contact, Long userId) {
         id = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -84,19 +88,4 @@ public class UserService implements UserRepo{
         return contactId;
 
     }
-
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//
-//        return jdbcTemplate.queryForObject(FIND_USER_BY_USERNAME, new Object[]{username}, rs -> {
-//            if (!rs.next()) {
-//                throw new UsernameNotFoundException("User not found with username: " + username);
-//            }
-//            return new CustomUserDetails(
-//                    rs.getLong("id"),
-//                    rs.getString("username"),
-//                    rs.getString("user_password")
-//            );
-//        });
-//    }
 }

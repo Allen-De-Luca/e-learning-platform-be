@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface ReminderRepo {
 
-    void addContactUser(Contact contact, Long userId);
-
     void addContactEmail(Long contactId, List<String> emails);
 
     void deleteContactEmail(Long contactId, List<String> emails);
