@@ -30,7 +30,7 @@ public class ReminderController {
         reminderService.saveCustomer(newCustomerReq.getFirstName(),
                 newCustomerReq.getLastName(), newCustomerReq.getPhoneNumber(),
                 newCustomerReq.getVatNumber(), newCustomerReq.getCompany(),
-                newCustomerReq.getEmail(), contactId);
+                newCustomerReq.getEmail(), contactId, );
     }
 
     @PostMapping("/addContactEmail")

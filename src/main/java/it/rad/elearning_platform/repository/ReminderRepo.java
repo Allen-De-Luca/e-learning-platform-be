@@ -17,7 +17,7 @@ public interface ReminderRepo {
 
     List<Contact> getAllContacts();
 
-    void saveCustomer(String firstName, String lastName, String phoneNumber, String vatNumber, String company, List<String> emails, Long contactId);
+    void saveCustomer(String firstName, String lastName, String phoneNumber, String vatNumber, String company, List<String> emails, Long contactId, Long customerId);
 
     void addCustomerEmail(Long customerId, List<String> emails);
 

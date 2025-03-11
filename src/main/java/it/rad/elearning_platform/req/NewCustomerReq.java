@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class NewCustomerReq {
 
+    private Long customerId;
     private String firstName;
     private String lastName;
     private String phoneNumber;

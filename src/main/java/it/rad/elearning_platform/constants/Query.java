@@ -30,6 +30,14 @@ public class Query
     public static final String INSERT_CUSTOMER =
             "INSERT INTO customer (first_name, last_name, phone_number, vat_number, company) " +
                     "VALUES (?,?,?,?,?)";
+    public static final String UPDATE_CUSTOMER=
+            "UPDATE customer SET " +
+                    "first_name = ?, " +
+                    "last_name = ?, " +
+                    "phone_number = ?, " +
+                    "vat_number = ?, " +
+                    "company = ? " +
+                    "WHERE id = ?;";
     public static final String INSERT_CUSTOMER_EMAIL =
             "INSERT INTO customer_email(customer_id, email) values (?,?)";
     public static final String ADD_CUSTOMER_EMAIL_BY_CUSTOMER_ID=
